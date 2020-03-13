@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DemoApp.BusinessModel\DemoApp.BusinessModel.csproj" />
+    <ProjectReference Include="..\MarshallingDelegation.Mvvm\MarshallingDelegation.Mvvm.csproj" />
+    <ProjectReference Include="..\MarshallingDelegation\MarshallingDelegation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Prism">
+      <HintPath>..\..\..\.nuget\packages\Prism.Core\7.2.0.1422\lib\netcoreapp3.0\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Wpf">
+      <HintPath>..\..\..\.nuget\packages\Prism.Wpf\7.2.0.1422\lib\netcoreapp3.0\Prism.Wpf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

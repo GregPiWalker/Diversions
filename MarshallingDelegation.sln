@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarshallingDelegation", "MarshallingDelegation\MarshallingDelegation.csproj", "{E558820A-6F7D-4D08-8E30-DFDBA9A4B02C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarshallingDelegation.Mvvm", "MarshallingDelegation.Mvvm\MarshallingDelegation.Mvvm.csproj", "{A8670AEA-D951-4857-9DD0-5A8CE4706790}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E558820A-6F7D-4D08-8E30-DFDBA9A4B02C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E558820A-6F7D-4D08-8E30-DFDBA9A4B02C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E558820A-6F7D-4D08-8E30-DFDBA9A4B02C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E558820A-6F7D-4D08-8E30-DFDBA9A4B02C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8670AEA-D951-4857-9DD0-5A8CE4706790}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8670AEA-D951-4857-9DD0-5A8CE4706790}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8670AEA-D951-4857-9DD0-5A8CE4706790}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8670AEA-D951-4857-9DD0-5A8CE4706790}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80B48719-7C25-411B-9F7C-1127EF549824}
+	EndGlobalSection
+EndGlobal
