@@ -12,7 +12,7 @@ namespace DemoApp
 {
     public sealed class DemoViewModel : DiverterBindableBase, IDisposable
     {
-        private int _asyncThreadId = 0;
+        private int _invokerThreadId = 0;
 
         static DemoViewModel()
         {
@@ -73,7 +73,7 @@ namespace DemoApp
         {
             // Getting the thread ID here works because the handler uses the caller's thread, and also
             // because it is the first event handler added to the event.
-            _asyncThreadId = Thread.CurrentThread.ManagedThreadId;
+            _invokerThreadId = Thread.CurrentThread.ManagedThreadId;
             Model.AddEventHandlerRecord(MarshalOption.CurrentThread, arg);
         }
 
@@ -94,7 +94,7 @@ namespace DemoApp
                 {
                     foreach (var record in args.NewItems)
                     {
-                        var recordVM = new RecordViewModel() { Model = record as HandlerRecord, DelegateInvokeThreadId = _asyncThreadId };
+                        var recordVM = new RecordViewModel() { Model = record as HandlerRecord, DelegateInvokeThreadId = _invokerThreadId };
                         EventRecords.Add(recordVM);
                     }
                 }

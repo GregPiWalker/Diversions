@@ -64,7 +64,7 @@ namespace Diversions
             var attrib = toAdd.Method.GetCustomAttribute(typeof(DiversionAttribute)) as DiversionAttribute;
             if (attrib == null)
             {
-                // This applies the configured default target loader if none is found.
+                // This applies the configured default diverter if none is found.
                 attrib = new DiversionAttribute();
             }
 
