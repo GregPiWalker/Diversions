@@ -22,11 +22,11 @@ Example code:
 */
 static Model()
 {
-    ThreadedHandlerAttribute.DefaultThreadOption = MarshalOption.Dispatcher;
+    DiversionAttribute.DefaultDiverter = MarshalOption.Dispatcher;
 }
 
 /**
-* Declare an event that is backed by a MarshallingDelegate.
+* Declare an event that is backed by a DiversionDelegate.
 */
 public event EventHandler<EventArgs> Event
 {
@@ -45,7 +45,7 @@ public Model()
     Event += HandleEventOnTask;
     Event += HandleEventOnCurrentThread;
 
-    // Raise the event once by invoking the MarshallingDelegate.  All three handlers
+    // Raise the event once by invoking the DiversionDelegate.  All three handlers
     // are executed, each with their own threading context.
     _eventDelegate.Invoke(this, null);
 }
