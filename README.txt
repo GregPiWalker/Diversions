@@ -53,7 +53,7 @@ public Model()
 private void HandleEventOnUiThread(object sender, EventArgs args)
 {
     // Everything in here is executed on the Application's main thread via the Dispatcher.
-    // Since no option was defined, this method implicitly uses the default marshalling option.
+    // Since no option was defined, this method implicitly uses the default diverter.
 }
 
 [Diversion(MarshalOption.RunTask)]
