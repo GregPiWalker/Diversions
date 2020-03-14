@@ -1,7 +1,7 @@
-﻿<Application x:Class="DelegateTestApp.App"
+﻿<Application x:Class="DemoApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:DelegateTestApp"
+             xmlns:local="clr-namespace:DemoApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

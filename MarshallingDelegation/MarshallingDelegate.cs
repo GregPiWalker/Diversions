@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MarshallingDelegation
@@ -147,24 +148,16 @@ namespace MarshallingDelegation
         /// <returns></returns>
         public async Task InvokeAsync(object sender, TArg arg)
         {
-            await Task.Run(() => Invoke(this, arg)).ConfigureAwait(false);
+            await Task.Run(() => Invoke(this, arg));
         }
 
-        //TODO: Disable this until I confirm that the threading does what was intended
-        //public async void InvokeParallel(object sender, TArg arg)
-        //{
-        //    if (_invocationList.Count == 0)
-        //    {
-        //        await InvokeAsync(sender, arg);
-        //    }
-        //    else
-        //    {
-        //        foreach (var target in _invocationList)
-        //        {
-        //            await target.InvokeAsync(sender, arg);
-        //        }
-        //    }
-        //}
+        public void InvokeParallel(object sender, TArg arg)
+        {
+            foreach (var target in _invocationList)
+            {
+                Task.Run(() => target.Invoke(this, arg));
+            }
+        }
 
         /// <summary>
         /// Returns the invocation list of the delegate.

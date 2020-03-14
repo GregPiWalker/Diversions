@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace DelegateTestApp
+namespace DemoApp
 {
     /// <summary>
     /// Interaction logic for App.xaml
