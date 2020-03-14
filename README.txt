@@ -4,10 +4,10 @@ the library to execute event handlers on the UI thread, which is useful for
 View DataBindings that target observable properties or collections on a 
 business model (whether directly, or indirectly via a ViewModel).
 
-While this sample declares an event handler to be dispatched to the UI thread,
+While this sample defines an event handler to be dispatched to the UI thread,
 a common use case is a View binding directly to an ObservableCollection.
-In this case, there is no opportunity to explicitly define the thread context.
-By using the provided MarshallingObservableCollection class, you can use the
+In this case, there is no opportunity to explicitly define the thread diversion.
+By using the provided DivertingObservableCollection class, you can use the
 same collection to supply notifications to DataBindings on the UI thread
 as well as notifications to the business layer without involving the UI thread.
 
@@ -16,9 +16,9 @@ Example code:
 -----------------------------------------------------------------------------------
 
 /**
-* Configure the default marshalling behavior to dispatch work to the main thread.
-* This will cause every event handler that does not explicitly define a marshal
-* option to use the default option.
+* Configure the default diverter to dispatch work to the main thread.
+* This will cause every event handler that does not explicitly define a diversion
+* to use the default option.
 */
 static Model()
 {
@@ -56,13 +56,13 @@ private void HandleEventOnUiThread(object sender, EventArgs args)
     // Since no option was defined, this method implicitly uses the default marshalling option.
 }
 
-[ThreadedHandler(MarshalOption.RunTask)]
+[Diversion(MarshalOption.RunTask)]
 private void HandleEventOnTask(object sender, EventArgs args)
 {
     // Everything in here is executed on a Task.
 }
 
-[ThreadedHandler(MarshalOption.CurrentThread)]
+[Diversion(MarshalOption.CurrentThread)]
 private void HandleEventOnCurrentThread(object sender, EventArgs args)
 {
     // Everything in here is executed on the same thread that raised the source event.

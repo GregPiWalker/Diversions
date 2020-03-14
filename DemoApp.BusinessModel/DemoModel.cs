@@ -1,16 +1,16 @@
 ﻿using log4net;
 using System;
 using System.Threading;
-using MarshallingDelegation;
-using MarshallingDelegation.Mvvm;
-using MarshallingDelegation.ObjectModel;
+using Diversions;
+using Diversions.Mvvm;
+using Diversions.ObjectModel;
 
 namespace DemoApp.BusinessModel
 {
-    public class DemoModel : MarshallingBindableBase
+    public class DemoModel : DiverterBindableBase
     {
         public static readonly ILog _logger = LogManager.GetLogger(typeof(DemoModel));
-        private readonly MarshallingDelegate<int> _notifyDelegate = new MarshallingDelegate<int>();
+        private readonly DiversionDelegate<int> _notifyDelegate = new DiversionDelegate<int>();
         private int _notificationId;
 
         public DemoModel()
@@ -23,7 +23,7 @@ namespace DemoApp.BusinessModel
             remove { _notifyDelegate.Remove(value); }
         }
 
-        public MarshallingObservableCollection<HandlerRecord> Records { get; } = new MarshallingObservableCollection<HandlerRecord>();
+        public DivertingObservableCollection<HandlerRecord> Records { get; } = new DivertingObservableCollection<HandlerRecord>();
 
         public void AddEventHandlerRecord(MarshalOption option, int notificationId)
         {

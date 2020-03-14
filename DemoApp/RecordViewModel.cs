@@ -1,10 +1,10 @@
 ﻿using System;
 using DemoApp.BusinessModel;
-using MarshallingDelegation.Mvvm;
+using Diversions.Mvvm;
 
 namespace DemoApp
 {
-    public class RecordViewModel : MarshallingBindableBase
+    public class RecordViewModel : DiverterBindableBase
     {
         private int _delegateInvokeThreadId;
 

@@ -3,21 +3,21 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Windows;
 using Prism.Commands;
-using MarshallingDelegation;
-using MarshallingDelegation.ObjectModel;
-using MarshallingDelegation.Mvvm;
+using Diversions;
+using Diversions.ObjectModel;
+using Diversions.Mvvm;
 using DemoApp.BusinessModel;
 
 namespace DemoApp
 {
-    public sealed class DemoViewModel : MarshallingBindableBase, IDisposable
+    public sealed class DemoViewModel : DiverterBindableBase, IDisposable
     {
         private int _asyncThreadId = 0;
 
         static DemoViewModel()
         {
-            // Add the option to use the UI Dispatcher, and set it to the default option for all MarshallingDelegates.
-            ThreadedHandlerAttribute.AddOption(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new Type[] { typeof(Delegate), typeof(object[]) }, SynchronizationContext.Current, true);
+            // Add the option to use the UI Dispatcher, and set it to be the default option for implicit diversions.
+            DiversionAttribute.AddDiverter(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new Type[] { typeof(Delegate), typeof(object[]) }, SynchronizationContext.Current, true);
         }
 
         public DemoViewModel()
@@ -36,7 +36,7 @@ namespace DemoApp
 
         public DemoModel Model { get; private set; }
 
-        public MarshallingObservableCollection<RecordViewModel> EventRecords { get; } = new MarshallingObservableCollection<RecordViewModel>();
+        public DivertingObservableCollection<RecordViewModel> EventRecords { get; } = new DivertingObservableCollection<RecordViewModel>();
         
         public DelegateCommand StimulateCommand { get; private set; }
 
@@ -53,22 +53,22 @@ namespace DemoApp
 
         private void HandleNotifyOnUiThread(object sender, int arg)
         {
-            Model.AddEventHandlerRecord(ThreadedHandlerAttribute.DefaultThreadOption, arg);
+            Model.AddEventHandlerRecord(DiversionAttribute.DefaultDiverter, arg);
         }
 
-        [ThreadedHandler(MarshalOption.StartNewTask)]
+        [Diversion(MarshalOption.StartNewTask)]
         private void HandleNotifyOnNewTask(object sender, int arg)
         {
             Model.AddEventHandlerRecord(MarshalOption.StartNewTask, arg);
         }
 
-        [ThreadedHandler(MarshalOption.RunTask)]
+        [Diversion(MarshalOption.RunTask)]
         private void HandleNotifyOnRunTask(object sender, int arg)
         {
             Model.AddEventHandlerRecord(MarshalOption.RunTask, arg);
         }
 
-        [ThreadedHandler(MarshalOption.CurrentThread)]
+        [Diversion(MarshalOption.CurrentThread)]
         private void HandleNotifyOnCurrentThread(object sender, int arg)
         {
             // Getting the thread ID here works because the handler uses the caller's thread, and also
@@ -83,7 +83,7 @@ namespace DemoApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        [ThreadedHandler(MarshalOption.RunTask)]
+        [Diversion(MarshalOption.RunTask)]
         private void HandleRecordCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
             // This method is multithreaded to demonstate the next marshalling stage for the UI update.

@@ -1,11 +1,11 @@
 ﻿using log4net;
 using System;
-using MarshallingDelegation;
-using MarshallingDelegation.Mvvm;
+using Diversions;
+using Diversions.Mvvm;
 
 namespace DemoApp.BusinessModel
 {
-    public class HandlerRecord : MarshallingBindableBase
+    public class HandlerRecord : DiverterBindableBase
     {
         private int _handlerThreadId;
         private int _notificationId;

@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarshallingDelegation.Mvvm\MarshallingDelegation.Mvvm.csproj" />
-    <ProjectReference Include="..\MarshallingDelegation\MarshallingDelegation.csproj" />
+    <ProjectReference Include="..\Diversions.Mvvm\Diversions.Mvvm.csproj" />
+    <ProjectReference Include="..\Diversions\Diversions.csproj" />
   </ItemGroup>
   
 </Project>
