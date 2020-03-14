@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Prism.Core" Version="7.2.0.1422" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1422" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DemoApp.BusinessModel\DemoApp.BusinessModel.csproj" />
     <ProjectReference Include="..\MarshallingDelegation.Mvvm\MarshallingDelegation.Mvvm.csproj" />
     <ProjectReference Include="..\MarshallingDelegation\MarshallingDelegation.csproj" />

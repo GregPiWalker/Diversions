@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
+//using Microsoft.CodeAnalysis.Scripting;
+//using Microsoft.CodeAnalysis.CSharp.Scripting;
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -17,12 +17,12 @@ namespace MarshallingDelegation
         private static readonly Dictionary<MarshalOption, MarshalInfo> _Marshallers = new Dictionary<MarshalOption, MarshalInfo>();
         private static readonly string[] _Imports = new string[] { "System", "System.Threading", "System.Threading.Tasks" };
         private static readonly Assembly[] _Assemblies = new Assembly[] { };
-        private static ScriptOptions _CompileOptions;
+        //private static ScriptOptions _CompileOptions;
         private static MarshalOption _DefaultOption;
 
         static ThreadedHandlerAttribute()
         {
-            PopulateOptions();
+            //PopulateOptions();
 
             AddOption(MarshalOption.CurrentThread, string.Empty, null, null);
             AddOption(MarshalOption.RunTask, Task.Factory, "StartNew", new Type[] { typeof(Action) }, null, false, new object[] { CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default });
@@ -43,12 +43,12 @@ namespace MarshallingDelegation
             _Logger.Debug($"{nameof(ThreadedHandlerAttribute)}: method \"{callerName}\" is using the default thread context-switching option.");
         }
 
-        public ThreadedHandlerAttribute(string marshallerExpression, string marshalMethod, Type[] paramTypes, string[] additionalImports, Type[] additionalTypes, SynchronizationContext syncContext = null, object[] staticArguments = null)
-        {
-            SelectedOption = MarshalOption.UserDefined;
-            UpdateOptions(additionalImports, additionalTypes);
-            MarshalInfo = new MarshalInfo(marshallerExpression, marshalMethod, paramTypes, _CompileOptions, syncContext, staticArguments);
-        }
+        //public ThreadedHandlerAttribute(string marshallerExpression, string marshalMethod, Type[] paramTypes, string[] additionalImports, Type[] additionalTypes, SynchronizationContext syncContext = null, object[] staticArguments = null)
+        //{
+        //    SelectedOption = MarshalOption.UserDefined;
+        //    UpdateOptions(additionalImports, additionalTypes);
+        //    MarshalInfo = new MarshalInfo(marshallerExpression, marshalMethod, paramTypes, _CompileOptions, syncContext, staticArguments);
+        //}
 
         public static MarshalOption DefaultThreadOption 
         { 
@@ -90,51 +90,51 @@ namespace MarshallingDelegation
             }
         }
 
-        private static void AddOption(MarshalOption option, string marshallerLoader, string marshalMethod, Type[] paramTypes, SynchronizationContext syncContext = null, bool makeDefault = false, object[] staticArguments = null)
-        {
-            try
-            {
-                MarshalInfo loader = null;
-                if (!string.IsNullOrEmpty(marshallerLoader) && !string.IsNullOrEmpty(marshalMethod))
-                {
-                    loader = new MarshalInfo(marshallerLoader, marshalMethod, paramTypes, _CompileOptions, syncContext, staticArguments);
-                }
+        //private static void AddOption(MarshalOption option, string marshallerLoader, string marshalMethod, Type[] paramTypes, SynchronizationContext syncContext = null, bool makeDefault = false, object[] staticArguments = null)
+        //{
+        //    try
+        //    {
+        //        MarshalInfo loader = null;
+        //        if (!string.IsNullOrEmpty(marshallerLoader) && !string.IsNullOrEmpty(marshalMethod))
+        //        {
+        //            loader = new MarshalInfo(marshallerLoader, marshalMethod, paramTypes, _CompileOptions, syncContext, staticArguments);
+        //        }
 
-                _Marshallers.Add(option, loader);
+        //        _Marshallers.Add(option, loader);
 
-                if (makeDefault)
-                {
-                    DefaultThreadOption = option;
-                }
-            }
-            catch (Exception ex)
-            {
-                _Logger.Error($"{nameof(AddOption)}: {ex.GetType().Name} while trying to add a new context-switch marshaller.", ex);
-            }
-        }
+        //        if (makeDefault)
+        //        {
+        //            DefaultThreadOption = option;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _Logger.Error($"{nameof(AddOption)}: {ex.GetType().Name} while trying to add a new context-switch marshaller.", ex);
+        //    }
+        //}
 
-        private static void PopulateOptions()
-        {
-            _CompileOptions = ScriptOptions.Default.WithImports(_Imports);
-            _CompileOptions = _CompileOptions.WithReferences(_Assemblies);
-        }
+        //private static void PopulateOptions()
+        //{
+        //    _CompileOptions = ScriptOptions.Default.WithImports(_Imports);
+        //    _CompileOptions = _CompileOptions.WithReferences(_Assemblies);
+        //}
 
-        private static void UpdateOptions(string[] additionalImports, Type[] additionalTypes)
-        {
-            lock (_CompileOptions)
-            {
-                if (additionalImports != null && additionalImports.Length > 0)
-                {
-                    _CompileOptions = _CompileOptions.WithImports(additionalImports);
-                }
+        //private static void UpdateOptions(string[] additionalImports, Type[] additionalTypes)
+        //{
+        //    lock (_CompileOptions)
+        //    {
+        //        if (additionalImports != null && additionalImports.Length > 0)
+        //        {
+        //            _CompileOptions = _CompileOptions.WithImports(additionalImports);
+        //        }
 
-                if (additionalTypes != null && additionalTypes.Length > 0)
-                {
-                    var assemblies = additionalTypes.Select(t => t.Assembly).ToArray();
-                    _CompileOptions = _CompileOptions.WithReferences(assemblies);
-                }
-            }
-        }
+        //        if (additionalTypes != null && additionalTypes.Length > 0)
+        //        {
+        //            var assemblies = additionalTypes.Select(t => t.Assembly).ToArray();
+        //            _CompileOptions = _CompileOptions.WithReferences(assemblies);
+        //        }
+        //    }
+        //}
     }
 
     internal class MarshalInfo
@@ -171,19 +171,19 @@ namespace MarshallingDelegation
         /// <param name="paramTypes"></param>
         /// <param name="options"></param>
         /// <param name="staticArguments"></param>
-        internal MarshalInfo(string instanceLoader, string targetMethod, Type[] paramTypes, ScriptOptions options, SynchronizationContext syncContext = null, object[] staticArguments = null)
-        {
-            StaticArguments = staticArguments;
-            MethodParameters = paramTypes;
-            SynchronizationContext = syncContext;
+        //internal MarshalInfo(string instanceLoader, string targetMethod, Type[] paramTypes, ScriptOptions options, SynchronizationContext syncContext = null, object[] staticArguments = null)
+        //{
+        //    StaticArguments = staticArguments;
+        //    MethodParameters = paramTypes;
+        //    SynchronizationContext = syncContext;
 
-            if (staticArguments != null && staticArguments.Length > 0)
-            {
-                paramTypes = paramTypes.Concat(staticArguments.Select(o => o.GetType())).ToArray();
-            }
+        //    if (staticArguments != null && staticArguments.Length > 0)
+        //    {
+        //        paramTypes = paramTypes.Concat(staticArguments.Select(o => o.GetType())).ToArray();
+        //    }
 
-            CompileExpression(instanceLoader, targetMethod, paramTypes, options);
-        }
+        //    CompileExpression(instanceLoader, targetMethod, paramTypes, options);
+        //}
 
         public SynchronizationContext SynchronizationContext { get; private set; }
 
@@ -195,11 +195,11 @@ namespace MarshallingDelegation
 
         public MethodInfo MarshalMethod { get; private set; }
 
-        private async void CompileExpression(string loaderExpression, string methodName, Type[] paramTypes, ScriptOptions options)
-        {
-            var scriptState = await CSharpScript.RunAsync<Func<object>>(LambdaOperator + loaderExpression, options);
-            Marshaller = scriptState.ReturnValue();
-            MarshalMethod = Marshaller.GetType().GetMethod(methodName, paramTypes);
-        }
+        //private async void CompileExpression(string loaderExpression, string methodName, Type[] paramTypes, ScriptOptions options)
+        //{
+        //    var scriptState = await CSharpScript.RunAsync<Func<object>>(LambdaOperator + loaderExpression, options);
+        //    Marshaller = scriptState.ReturnValue();
+        //    MarshalMethod = Marshaller.GetType().GetMethod(methodName, paramTypes);
+        //}
     }
 }
