@@ -40,7 +40,7 @@ namespace Diversions
 
         public static MarshalOption DefaultDiverter 
         { 
-            get => _DefaultDiverter;
+            get { return _DefaultDiverter; }
             set
             {
                 _DefaultDiverter = value;
