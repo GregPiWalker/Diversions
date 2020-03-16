@@ -76,7 +76,16 @@ namespace Diversions
             if (diversion == null)
             {
                 // If method-level didn't exist, look for a class-level diversion.
-                diversion = toAdd.Method.DeclaringType.GetCustomAttribute(typeof(DiversionAttribute)) as DiversionAttribute;
+                if (toAdd.Target != null)
+                {
+                    // If there's an instance, find the Type from it.
+                    diversion = toAdd.Target.GetType().GetCustomAttribute(typeof(DiversionAttribute)) as DiversionAttribute;
+                }
+                else
+                {
+                    // In the static case, find the Type from the MethodInfo.
+                    diversion = toAdd.Method.DeclaringType.GetCustomAttribute(typeof(DiversionAttribute)) as DiversionAttribute;
+                }
             }
 
             if (diversion == null)
