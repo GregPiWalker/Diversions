@@ -54,6 +54,9 @@
     <Compile Include="..\..\Core\Diversions\DispatcherDelegate.cs">
       <Link>DispatcherDelegate.cs</Link>
     </Compile>
+    <Compile Include="..\..\Core\Diversions\Diversion.cs">
+      <Link>Diversion.cs</Link>
+    </Compile>
     <Compile Include="..\..\Core\Diversions\DiversionAttribute.cs">
       <Link>DiversionAttribute.cs</Link>
     </Compile>
@@ -62,6 +65,9 @@
     </Compile>
     <Compile Include="..\..\Core\Diversions\DivertingObservableCollection.cs">
       <Link>DivertingObservableCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\Diversions\MarshalInfo.cs">
+      <Link>MarshalInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Core\Diversions\MarshalOption.cs">
       <Link>MarshalOption.cs</Link>
