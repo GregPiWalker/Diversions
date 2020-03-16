@@ -17,7 +17,7 @@ namespace DemoApp
         static DemoViewModel()
         {
             // Add the option to use the UI Dispatcher, and set it to be the default option for implicit diversions.
-            DiversionAttribute.AddDiverter(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new Type[] { typeof(Delegate), typeof(object[]) }, SynchronizationContext.Current, true);
+            Diversion.AddDiverter(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new Type[] { typeof(Delegate), typeof(object[]) }, SynchronizationContext.Current, true);
         }
 
         public DemoViewModel()
@@ -53,7 +53,7 @@ namespace DemoApp
 
         private void HandleNotifyOnUiThread(object sender, int arg)
         {
-            Model.AddEventHandlerRecord(DiversionAttribute.DefaultDiverter, arg);
+            Model.AddEventHandlerRecord(Diversion.DefaultDiverter, arg);
         }
 
         [Diversion(MarshalOption.StartNewTask)]

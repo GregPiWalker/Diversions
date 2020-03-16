@@ -10,7 +10,7 @@ namespace Diversions.ObjectModel
     /// This class marshals it's CRUD operations onto the application domain's <see cref="SynchronizationContext"/>,
     /// if one exists.  It obtains the SynchronizationContext indirectly via the use of <see cref="DiversionDelegate{TArg}"/>s
     /// for the <see cref="CollectionChanged"/> and <see cref="PropertyChanged"/> events.  Because <see cref="DiversionDelegate{TArg}"/>s
-    /// are used for the events, this class is also suitable for crossing thread boundaries.
+    /// are used for the events, this class is also suitable for crossing thread boundaries at the behest of the invoked EventHandlers.
     /// 
     /// NOTE: There are various implementations of <see cref="ObservableCollection{T}"/>s on the web that try to do
     /// the same thing, yet fail.  They do not override the CRUD operations; instead they simply invoke the <see cref="CollectionChanged"/>

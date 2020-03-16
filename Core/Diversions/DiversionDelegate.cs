@@ -1,6 +1,7 @@
 ﻿using log4net;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace Diversions
 
         public DiversionDelegate()
         { }
+
+        public bool HasListeners { get { return _invocationList.Any(); } }
 
         public void Invoke(object sender, TArg arg)
         {
@@ -60,15 +63,29 @@ namespace Diversions
 
         public DelegateBase<TArg> Add(Delegate toAdd)
         {
-            DelegateBase<TArg> newDel = null;
-            var attrib = toAdd.Method.GetCustomAttribute(typeof(DiversionAttribute)) as DiversionAttribute;
-            if (attrib == null)
+            var paramType = toAdd.Method.GetParameters().Last().ParameterType;
+            if (paramType != typeof(TArg))
             {
-                // This applies the configured default diverter if none is found.
-                attrib = new DiversionAttribute();
+                throw new ArgumentException($"toAdd: wrong delegate type.  Got {paramType.Name}, expected {typeof(TArg).Name}.");
             }
 
-            switch (attrib.SelectedDiverter)
+            DelegateBase<TArg> newDel = null;
+
+            // First look for a method-level diversion override.
+            var diversion = toAdd.Method.GetCustomAttribute(typeof(DiversionAttribute)) as DiversionAttribute;
+            if (diversion == null)
+            {
+                // If method-level didn't exist, look for a class-level diversion.
+                diversion = toAdd.Method.DeclaringType.GetCustomAttribute(typeof(DiversionAttribute)) as DiversionAttribute;
+            }
+
+            if (diversion == null)
+            {
+                // If neither a class nor a method Diversion were defined, then just go with the global default.
+                diversion = new DiversionAttribute();
+            }
+
+            switch (diversion.SelectedDiverter)
             {
                 case MarshalOption.CurrentThread:
                     newDel = new CurrentThreadDelegate<TArg>(toAdd);
@@ -84,7 +101,7 @@ namespace Diversions
                     break;
             }
 
-            newDel.MarshalInfo = attrib.MarshalInfo;
+            newDel.MarshalInfo = diversion.MarshalInfo;
             Add(newDel);
             return newDel;
         }
@@ -99,13 +116,18 @@ namespace Diversions
 
         public DelegateBase<TArg> Remove(Delegate toRemove)
         {
+            if (toRemove.Method.GetParameters().Last().ParameterType != typeof(TArg))
+            {
+                throw new ArgumentException("toRemove: wrong delegate type");
+            }
+
             DelegateBase<TArg> removed = null;
             lock (_invocationList)
             {
                 foreach (var redirect in _invocationList)
                 {
                     if ((redirect.DirectTarget == toRemove.Target && redirect.DirectMethod == toRemove.Method)
-                        || (redirect.MarshalInfo.Marshaller == toRemove.Target && redirect.MarshalInfo.MarshalMethod == toRemove.Method))
+                        || (redirect.MarshalInfo != null && redirect.MarshalInfo.Marshaller == toRemove.Target && redirect.MarshalInfo.MarshalMethod == toRemove.Method))
                     {
                         removed = redirect;
                         break;
