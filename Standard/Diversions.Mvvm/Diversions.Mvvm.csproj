@@ -48,8 +48,8 @@
     <Compile Include="..\..\Core\Diversions.Mvvm\BindableBase.cs">
       <Link>BindableBase.cs</Link>
     </Compile>
-    <Compile Include="..\..\Core\Diversions.Mvvm\DiverterBindableBase.cs">
-      <Link>DiverterBindableBase.cs</Link>
+    <Compile Include="..\..\Core\Diversions.Mvvm\DivertingBindableBase.cs">
+      <Link>DivertingBindableBase.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
