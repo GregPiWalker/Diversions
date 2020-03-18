@@ -10,7 +10,7 @@ using DemoApp.BusinessModel;
 
 namespace DemoApp
 {
-    public sealed class DemoViewModel : DiverterBindableBase, IDisposable
+    public sealed class DemoViewModel : DivertingBindableBase, IDisposable
     {
         private int _invokerThreadId = 0;
 

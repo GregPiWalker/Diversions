@@ -13,7 +13,7 @@ namespace Diversions.Mvvm
     /// then data bindings on the <see cref="PropertyChanged"/> event will be automatically
     /// marshalled onto the Dispatcher.
     /// </summary>
-    public abstract class DiverterBindableBase : BindableBase
+    public abstract class DivertingBindableBase : BindableBase
     {
         private readonly DiversionDelegate<PropertyChangedEventArgs> _propertyChangedDelegate = new DiversionDelegate<PropertyChangedEventArgs>();
 

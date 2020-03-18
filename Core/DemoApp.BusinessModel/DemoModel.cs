@@ -7,7 +7,7 @@ using Diversions.ObjectModel;
 
 namespace DemoApp.BusinessModel
 {
-    public class DemoModel : DiverterBindableBase
+    public class DemoModel : DivertingBindableBase
     {
         public static readonly ILog _logger = LogManager.GetLogger(typeof(DemoModel));
         private readonly DiversionDelegate<int> _notifyDelegate = new DiversionDelegate<int>();

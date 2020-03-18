@@ -4,7 +4,7 @@ using Diversions.Mvvm;
 
 namespace DemoApp
 {
-    public class RecordViewModel : DiverterBindableBase
+    public class RecordViewModel : DivertingBindableBase
     {
         private int _delegateInvokeThreadId;
 

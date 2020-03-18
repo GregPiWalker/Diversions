@@ -5,7 +5,7 @@ using Diversions.Mvvm;
 
 namespace DemoApp.BusinessModel
 {
-    public class HandlerRecord : DiverterBindableBase
+    public class HandlerRecord : DivertingBindableBase
     {
         private int _handlerThreadId;
         private int _notificationId;
