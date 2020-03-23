@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
@@ -7,15 +6,21 @@ using System.Threading;
 namespace Diversions.ObjectModel
 {
     /// <summary>
-    /// This class marshals it's CRUD operations onto the application domain's <see cref="SynchronizationContext"/>,
+    /// This class is a derivation of the <see cref="ObservableCollection{T}"/>.
+    /// It marshals it's CRUD operations onto the application domain's <see cref="SynchronizationContext"/>,
     /// if one exists.  It obtains the SynchronizationContext indirectly via the use of <see cref="DiversionDelegate{TArg}"/>s
-    /// for the <see cref="CollectionChanged"/> and <see cref="PropertyChanged"/> events.  Because <see cref="DiversionDelegate{TArg}"/>s
-    /// are used for the events, this class is also suitable for crossing thread boundaries at the behest of the invoked EventHandlers.
+    /// for the <see cref="INotifyCollectionChanged.CollectionChanged"/> and <see cref="INotifyPropertyChanged.PropertyChanged"/>
+    /// events.  Because <see cref="DiversionDelegate{TArg}"/>s are used for the events, this class is also suitable for
+    /// crossing thread boundaries at the behest of the invoked EventHandlers.
+    /// Furthermore, if the <see cref="DiversionAttribute"/> classes static <see cref="DiversionAttribute.DefaultDiverter"/>
+    /// property is set for a UI Dispatcher, then event handlers on the <see cref="INotifyPropertyChanged.PropertyChanged"/>
+    /// event will be marshalled onto the dispatcher automatically.
     /// 
     /// NOTE: There are various implementations of <see cref="ObservableCollection{T}"/>s on the web that try to do
-    /// the same thing, yet fail.  They do not override the CRUD operations; instead they simply invoke the <see cref="CollectionChanged"/>
-    /// event on the application Dispatcher or send the invocation to the SynchronizationContext.  Superficially, this works but it
-    /// creates a race-condition that can cause an ItemsViewCollection to fail while validating collection changes.  This implementation
+    /// the same thing, but are flawed.  They do not override the CRUD operations; instead they simply invoke the
+    /// <see cref="INotifyCollectionChanged.CollectionChanged"/> event on the application Dispatcher or send the
+    /// invocation to the SynchronizationContext.  Superficially, this works but it creates a race-condition that
+    /// can cause an ItemsViewCollection to fail while validating collection changes.  This implementation
     /// does not create that race-condition.
     /// </summary>
     /// <typeparam name="TItem">The type of the contained items.</typeparam>

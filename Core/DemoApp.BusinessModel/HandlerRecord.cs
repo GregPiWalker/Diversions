@@ -9,6 +9,7 @@ namespace DemoApp.BusinessModel
     {
         private int _handlerThreadId;
         private int _notificationId;
+        private string _key;
         private MarshalOption _option;
 
         public int HandlerThreadId
@@ -21,6 +22,12 @@ namespace DemoApp.BusinessModel
         {
             get => _notificationId;
             set => SetProperty(ref _notificationId, value, nameof(NotificationId));
+        }
+
+        public string MarshalKey
+        {
+            get => _key;
+            set => SetProperty(ref _key, value, nameof(MarshalKey));
         }
 
         public MarshalOption MarshalOption

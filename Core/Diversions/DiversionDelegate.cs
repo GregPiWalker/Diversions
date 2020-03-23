@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -17,6 +18,11 @@ namespace Diversions
 
         public bool HasListeners { get { return _invocationList.Any(); } }
 
+        /// <summary>
+        /// Synchronously invoke this <see cref="DiversionDelegate{TArg}"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="arg"></param>
         public void Invoke(object sender, TArg arg)
         {
             foreach (var target in _invocationList)
@@ -26,11 +32,11 @@ namespace Diversions
         }
 
         /// <summary>
-        /// 
+        /// Asynchronously invoke this <see cref="DiversionDelegate{TArg}"/>.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="arg"></param>
-        /// <returns></returns>
+        /// <returns>A task that invokes this delegate.</returns>
         public async Task InvokeAsync(object sender, TArg arg)
         {
             await Task.Run(() => Invoke(this, arg));
@@ -38,10 +44,7 @@ namespace Diversions
 
         public void InvokeParallel(object sender, TArg arg)
         {
-            foreach (var target in _invocationList)
-            {
-                Task.Run(() => target.Invoke(this, arg));
-            }
+            _invocationList.AsParallel().ForAll(target => target.Invoke(this, arg));
         }
 
         /// <summary>
@@ -94,19 +97,32 @@ namespace Diversions
                 diversion = new DiversionAttribute();
             }
 
+            //TODO: move this to Factory or another method ?
             switch (diversion.SelectedDiverter)
             {
                 case MarshalOption.CurrentThread:
                     newDel = new CurrentThreadDelegate<TArg>(toAdd);
                     break;
 
-                case MarshalOption.StartNewTask:
+                //case MarshalOption.StartNewTask:
                 case MarshalOption.RunTask:
                     newDel = new TaskDelegate<TArg>(toAdd);
                     break;
 
                 case MarshalOption.Dispatcher:
                     newDel = new DispatcherDelegate<TArg>(toAdd);
+                    break;
+
+                case MarshalOption.UserDefined:
+                    // Search for expected user-defined types.
+                    if (diversion.MarshalInfo.Marshaller is IScheduler || diversion.MarshalInfo.Marshaller == typeof(Scheduler))
+                    {
+                        newDel = new SchedulerDelegate<TArg>(toAdd);
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown user-defined delegate type.");
+                    }
                     break;
             }
 

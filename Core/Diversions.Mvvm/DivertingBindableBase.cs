@@ -5,13 +5,17 @@ namespace Diversions.Mvvm
 {
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
-    /// This is a modified implementation that uses <see cref="DiversionDelegate{TArg}"/>s.
-    /// Locally, the <see cref="PropertyChanged"/> event is be raised on synchronously on
+    /// This is a derivation of BindableBase that uses <see cref="DiversionDelegate{TArg}"/>s.
+    /// Locally, the <see cref="INotifyPropertyChanged.PropertyChanged"/> event is raised synchronously on
     /// the caller's thread, but each event observer may divert the flow to a thread of
-    /// their choosing.  If the <see cref="DiversionAttribute"/> classes static 
+    /// their choosing.  
+    /// 
+    /// If the <see cref="DiversionAttribute"/> classes static 
     /// <see cref="DiversionAttribute.DefaultDiverter"/> property is set for a UI Dispatcher,
-    /// then data bindings on the <see cref="PropertyChanged"/> event will be automatically
-    /// marshalled onto the Dispatcher.
+    /// then event handlers on the <see cref="INotifyPropertyChanged.PropertyChanged"/> event will be automatically
+    /// marshalled onto the dispatcher.  While .NET marshalls data bindings on <see cref="INotifyPropertyChanged"/>
+    /// to the UI thread internally, Diversions extend that automatic marshalling to 
+    /// UserControls and CustomControls that observe ViewModel/Model events.
     /// </summary>
     public abstract class DivertingBindableBase : BindableBase
     {

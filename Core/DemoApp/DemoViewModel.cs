@@ -7,17 +7,24 @@ using Diversions;
 using Diversions.ObjectModel;
 using Diversions.Mvvm;
 using DemoApp.BusinessModel;
+using System.Reactive.Concurrency;
+using System.Collections.Generic;
 
 namespace DemoApp
 {
     public sealed class DemoViewModel : DivertingBindableBase, IDisposable
     {
+        private const string _SchedulerKey = "MyRxScheduler";
         private int _invokerThreadId = 0;
+        private static IScheduler _Scheduler = new EventLoopScheduler((a) => { return new Thread(a) { Name = "IScheduler Thread", IsBackground = true }; });
 
         static DemoViewModel()
         {
             // Add the option to use the UI Dispatcher, and set it to be the default option for implicit diversions.
-            Diversion.AddDiverter(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new Type[] { typeof(Delegate), typeof(object[]) }, SynchronizationContext.Current, true);
+            Diversion.AddDiverter(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new List<KeyValuePair<Type, object>>().AddKey(typeof(Delegate)).AddKey(typeof(object[])), SynchronizationContext.Current, true);
+
+            // Add a custom scheduler option that uses the Scheduler.Schedule(IScheduler, Action) extension method.
+            Diversion.AddDiverter(_SchedulerKey, typeof(Scheduler), "Schedule", new List<KeyValuePair<Type, object>>().AddValue(_Scheduler).AddKey(typeof(Action)), null, false);
         }
 
         public DemoViewModel()
@@ -30,8 +37,9 @@ namespace DemoApp
             Model.Records.CollectionChanged += HandleRecordCollectionChanged;
             Model.Notify += HandleNotifyOnCurrentThread;
             Model.Notify += HandleNotifyOnUiThread;
-            Model.Notify += HandleNotifyOnNewTask;
             Model.Notify += HandleNotifyOnRunTask;
+            Model.Notify += HandleNotifyOnScheduler;
+            //Model.Notify += HandleNotifyOnNewTask;
         }
 
         public DemoModel Model { get; private set; }
@@ -46,26 +54,33 @@ namespace DemoApp
         {
             Model.Records.CollectionChanged -= HandleRecordCollectionChanged;
             Model.Notify -= HandleNotifyOnUiThread;
-            Model.Notify -= HandleNotifyOnNewTask;
             Model.Notify -= HandleNotifyOnRunTask;
             Model.Notify -= HandleNotifyOnCurrentThread;
+            Model.Notify -= HandleNotifyOnScheduler;
+            //Model.Notify -= HandleNotifyOnNewTask;
         }
 
         private void HandleNotifyOnUiThread(object sender, int arg)
         {
-            Model.AddEventHandlerRecord(Diversion.DefaultDiverter, arg);
+            Model.AddEventHandlerRecord(Diversion.DefaultDiverter.ToEnum<MarshalOption>(), arg);
         }
 
-        [Diversion(MarshalOption.StartNewTask)]
-        private void HandleNotifyOnNewTask(object sender, int arg)
-        {
-            Model.AddEventHandlerRecord(MarshalOption.StartNewTask, arg);
-        }
+        //[Diversion(MarshalOption.StartNewTask)]
+        //private void HandleNotifyOnNewTask(object sender, int arg)
+        //{
+        //    Model.AddEventHandlerRecord(MarshalOption.StartNewTask, arg);
+        //}
 
         [Diversion(MarshalOption.RunTask)]
         private void HandleNotifyOnRunTask(object sender, int arg)
         {
             Model.AddEventHandlerRecord(MarshalOption.RunTask, arg);
+        }
+
+        [Diversion(MarshalOption.UserDefined, _SchedulerKey)]
+        private void HandleNotifyOnScheduler(object sender, int arg)
+        {
+            Model.AddEventHandlerRecord(_SchedulerKey, arg);
         }
 
         [Diversion(MarshalOption.CurrentThread)]

@@ -23,7 +23,7 @@
                 <Label Grid.Column="0" Content="Notification ID: " HorizontalAlignment="Right"/>
                 <Label Grid.Column="1" Content="{Binding Model.NotificationId}" HorizontalAlignment="Left"/>
                 <Label Grid.Column="2" Content="Marshalling Option: " HorizontalAlignment="Right"/>
-                <Label Grid.Column="3" Content="{Binding Model.MarshalOption}" HorizontalAlignment="Left"/>
+                <Label Grid.Column="3" Content="{Binding Model.MarshalKey}" HorizontalAlignment="Left"/>
                 <Label Grid.Column="4" Content="Raised on Thread: " HorizontalAlignment="Right"/>
                 <Label Grid.Column="5" Content="{Binding DelegateInvokeThreadId}" HorizontalAlignment="Left"/>
                 <Label Grid.Column="6" Content="Handled on Thread: " HorizontalAlignment="Right"/>

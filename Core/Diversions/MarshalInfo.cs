@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -14,28 +15,25 @@ namespace Diversions
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="targetMethod"></param>
-        /// <param name="paramTypes"></param>
-        /// <param name="staticArguments"></param>
-        internal MarshalInfo(object instance, string targetMethod, Type[] paramTypes, SynchronizationContext syncContext = null, object[] staticArguments = null)
+        /// <param name="methodInputs"></param>
+        internal MarshalInfo(object instance, string targetMethod, KeyValuePair<Type, object>[] methodInputs, SynchronizationContext syncContext = null)
         {
             Marshaller = instance;
-            StaticArguments = staticArguments;
-            MethodParameters = paramTypes;
+            MethodInputs = methodInputs;
             SynchronizationContext = syncContext;
+            Type[] inputTypes = methodInputs.Select(kp => kp.Key).ToArray();
 
-            if (staticArguments != null && staticArguments.Length > 0)
+            MarshalMethod = Marshaller.GetType().GetMethod(targetMethod, inputTypes);
+            if (MarshalMethod == null && Marshaller is Type)
             {
-                paramTypes = paramTypes.Concat(staticArguments.Select(o => o.GetType())).ToArray();
+                // Try again looking for static methods this time.
+                MarshalMethod = (Marshaller as Type).GetMethod(targetMethod, BindingFlags.Public | BindingFlags.Static, null, inputTypes, null);
             }
-
-            MarshalMethod = Marshaller.GetType().GetMethod(targetMethod, paramTypes);
         }
 
         public SynchronizationContext SynchronizationContext { get; private set; }
 
-        public object[] StaticArguments { get; private set; }
-
-        public Type[] MethodParameters { get; private set; }
+        public KeyValuePair<Type, object>[] MethodInputs { get; private set; }
 
         public object Marshaller { get; private set; }
 

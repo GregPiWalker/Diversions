@@ -33,6 +33,23 @@ namespace DemoApp.BusinessModel
                 {
                     HandlerThreadId = Thread.CurrentThread.ManagedThreadId,
                     MarshalOption = option,
+                    MarshalKey = option.ToString(),
+                    NotificationId = notificationId
+                };
+
+                Records.Add(r);
+            }
+        }
+
+        public void AddEventHandlerRecord(string optionKey, int notificationId)
+        {
+            lock (Records)
+            {
+                var r = new HandlerRecord()
+                {
+                    HandlerThreadId = Thread.CurrentThread.ManagedThreadId,
+                    MarshalOption = MarshalOption.UserDefined,
+                    MarshalKey = optionKey,
                     NotificationId = notificationId
                 };
 

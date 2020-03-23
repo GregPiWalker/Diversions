@@ -4,14 +4,19 @@ using System.Reflection;
 
 namespace Diversions
 {
-    internal class TaskDelegate<TArg> : DelegateBase<TArg>
+    /// <summary>
+    /// For now, this is identical to the <see cref="TaskDelegate{TArg}"/> class, but it could diverge if it
+    /// were to handle arguments in the future.
+    /// </summary>
+    /// <typeparam name="TArg"></typeparam>
+    internal class SchedulerDelegate<TArg> : DelegateBase<TArg>
     {
-        public TaskDelegate(Delegate temporary)
+        public SchedulerDelegate(Delegate temporary)
             : this(temporary.Target, temporary.Method)
         {
         }
 
-        public TaskDelegate(object target, MethodInfo method)
+        public SchedulerDelegate(object target, MethodInfo method)
         {
             DirectTarget = target;
             DirectMethod = method;
@@ -36,7 +41,7 @@ namespace Diversions
             // Plug the Action argument into the input list.
             object[] args = new object[MarshalInfo.MethodInputs.Length];
             for (int i = 0; i < args.Length; i++)
-            {
+            {                
                 if (MarshalInfo.MethodInputs[i].Key == typeof(Action) && MarshalInfo.MethodInputs[i].Value == null)
                 {
                     args[i] = action;
