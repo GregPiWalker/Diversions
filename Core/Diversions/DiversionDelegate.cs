@@ -115,7 +115,7 @@ namespace Diversions
 
                 case MarshalOption.UserDefined:
                     // Search for expected user-defined types.
-                    if (diversion.MarshalInfo.Marshaller is IScheduler || diversion.MarshalInfo.Marshaller == typeof(Scheduler))
+                    if (diversion.MarshalInfo.Marshaller is IScheduler || (Type)diversion.MarshalInfo.Marshaller == typeof(Scheduler))
                     {
                         newDel = new SchedulerDelegate<TArg>(toAdd);
                     }
