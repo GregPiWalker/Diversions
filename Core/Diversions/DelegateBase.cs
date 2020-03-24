@@ -22,7 +22,7 @@ namespace Diversions
 
         internal MarshalInfo MarshalInfo 
         { 
-            get => _marshalInfo;
+            get { return _marshalInfo; }
             set
             {
                 _marshalInfo = value;
