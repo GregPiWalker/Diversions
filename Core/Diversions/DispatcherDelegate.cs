@@ -4,38 +4,48 @@ using System.Threading;
 
 namespace Diversions
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TArg"></typeparam>
     internal class DispatcherDelegate<TArg> : DelegateBase<TArg>
     {
+        internal delegate object DispatcherInvoke(Delegate d, params object[] a);
+        private readonly object[] _innerArgs;
+
         public DispatcherDelegate(Delegate temporary)
             : this(temporary.Target, temporary.Method)
         {
         }
 
         public DispatcherDelegate(object target, MethodInfo method)
+            : base(target, method)
         {
-            DirectTarget = target;
-            DirectMethod = method;
-            DirectDelegate = (EventHandler<TArg>)Delegate.CreateDelegate(typeof(EventHandler<TArg>), target, method);
+            _innerArgs = new object[2];
         }
+
+        public DispatcherInvoke IndirectDelegate { get; private set; }
 
         public override void Invoke(object sender, TArg arg)
         {
-            var current = SynchronizationContext.Current;
-            if (SynchronizationContext.Current != null && SynchronizationContext.Current == MarshalInfo.SynchronizationContext)
-            {
-                if (DirectDelegate == null)
-                {
-                    // No event handlers are connected.
-                    return;
-                }
+            // The Dispatcher internally chooses whether to invoke directly or queue the work up,
+            // so no need to bother doing that here.
+            _innerArgs[0] = sender;
+            _innerArgs[1] = arg;
 
-                DirectDelegate(sender, arg);
+            IndirectDelegate(DirectDelegate, _innerArgs);
+        }
+
+        protected override void OnMarshalInfoSet()
+        {
+            if (MarshalInfo == null)
+            {
+                IndirectDelegate = null;
             }
             else
             {
-                // The defined marshaller's SyncrhonizationContext did not match the current context.
-                // A marshaller with parameters was defined, so inject the target action into the specified marshaller.
-                MarshalInfo.MarshalMethod.Invoke(MarshalInfo.Marshaller, new object[] { DirectDelegate, new object[] { sender, arg } });
+                // Create a delegate to the Invoke instance method.
+                IndirectDelegate = (DispatcherInvoke)Delegate.CreateDelegate(typeof(DispatcherInvoke), MarshalInfo.Marshaller, MarshalInfo.MarshalMethod);
             }
         }
     }

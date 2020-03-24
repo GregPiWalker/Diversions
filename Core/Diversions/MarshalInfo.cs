@@ -16,6 +16,7 @@ namespace Diversions
         /// <param name="instance"></param>
         /// <param name="targetMethod"></param>
         /// <param name="methodInputs"></param>
+        /// <param name="syncContext"></param>
         internal MarshalInfo(object instance, string targetMethod, KeyValuePair<Type, object>[] methodInputs, SynchronizationContext syncContext = null)
         {
             Marshaller = instance;

@@ -28,7 +28,7 @@ namespace Diversions.ObjectModel
     {
         private readonly DiversionDelegate<NotifyCollectionChangedEventArgs> _collectionChangedDelegate = new DiversionDelegate<NotifyCollectionChangedEventArgs>();
         private readonly DiversionDelegate<PropertyChangedEventArgs> _propertyChangedDelegate = new DiversionDelegate<PropertyChangedEventArgs>();
-        private SynchronizationContext _synchronizationContext;
+        private SynchronizationContext _synchronizationContext = null;
 
         /// <inheritdoc cref="ObservableCollection{T}"/>
         public override event NotifyCollectionChangedEventHandler CollectionChanged

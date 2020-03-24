@@ -9,6 +9,7 @@ using Diversions.Mvvm;
 using DemoApp.BusinessModel;
 using System.Reactive.Concurrency;
 using System.Collections.Generic;
+using System.Windows.Threading;
 
 namespace DemoApp
 {
@@ -21,7 +22,7 @@ namespace DemoApp
         static DemoViewModel()
         {
             // Add the option to use the UI Dispatcher, and set it to be the default option for implicit diversions.
-            Diversion.AddDiverter(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new List<KeyValuePair<Type, object>>().AddKey(typeof(Delegate)).AddKey(typeof(object[])), SynchronizationContext.Current, true);
+            Diversion.AddDiverter(MarshalOption.Dispatcher, Application.Current.Dispatcher, "Invoke", new List<KeyValuePair<Type, object>>().AddKey(typeof(Delegate)).AddKey(typeof(object[])), new DispatcherSynchronizationContext(), true);
 
             // Add a custom scheduler option that uses the Scheduler.Schedule(IScheduler, Action) extension method.
             Diversion.AddDiverter(_SchedulerKey, typeof(Scheduler), "Schedule", new List<KeyValuePair<Type, object>>().AddValue(_Scheduler).AddKey(typeof(Action)), null, false);

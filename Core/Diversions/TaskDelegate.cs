@@ -1,22 +1,25 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Diversions
 {
     internal class TaskDelegate<TArg> : DelegateBase<TArg>
     {
+        internal delegate Task StartNew(Action action, CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler);
+
         public TaskDelegate(Delegate temporary)
             : this(temporary.Target, temporary.Method)
         {
         }
 
         public TaskDelegate(object target, MethodInfo method)
+            : base(target, method)
         {
-            DirectTarget = target;
-            DirectMethod = method;
-            DirectDelegate = (EventHandler<TArg>)Delegate.CreateDelegate(typeof(EventHandler<TArg>), target, method);
         }
+
+        public StartNew IndirectDelegate { get; private set; }
 
         public override void Invoke(object sender, TArg arg)
         {
@@ -33,21 +36,20 @@ namespace Diversions
                 }
             };
 
-            // Plug the Action argument into the input list.
-            object[] args = new object[MarshalInfo.MethodInputs.Length];
-            for (int i = 0; i < args.Length; i++)
-            {
-                if (MarshalInfo.MethodInputs[i].Key == typeof(Action) && MarshalInfo.MethodInputs[i].Value == null)
-                {
-                    args[i] = action;
-                }
-                else
-                {
-                    args[i] = MarshalInfo.MethodInputs[i].Value;
-                }
-            }
+            IndirectDelegate(action, (CancellationToken)MarshalInfo.MethodInputs[1].Value, (TaskCreationOptions)MarshalInfo.MethodInputs[2].Value, (TaskScheduler)MarshalInfo.MethodInputs[3].Value);
+        }
 
-            MarshalInfo.MarshalMethod.Invoke(MarshalInfo.Marshaller, args);
+        protected override void OnMarshalInfoSet()
+        {
+            if (MarshalInfo == null)
+            {
+                IndirectDelegate = null;
+            }
+            else
+            {
+                // Create a delegate to the StartNew instance method.
+                IndirectDelegate = (StartNew)Delegate.CreateDelegate(typeof(StartNew), MarshalInfo.Marshaller, MarshalInfo.MarshalMethod);
+            }
         }
     }
 }

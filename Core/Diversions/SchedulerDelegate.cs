@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reflection;
 
 namespace Diversions
@@ -8,20 +9,22 @@ namespace Diversions
     /// For now, this is identical to the <see cref="TaskDelegate{TArg}"/> class, but it could diverge if it
     /// were to handle arguments in the future.
     /// </summary>
-    /// <typeparam name="TArg"></typeparam>
+    /// <typeparam name="TArg">Type of EventHandler generic parameter</typeparam>
     internal class SchedulerDelegate<TArg> : DelegateBase<TArg>
     {
+        internal delegate IDisposable SchedulerSchedule(IScheduler scheduler, Action action);
+
         public SchedulerDelegate(Delegate temporary)
             : this(temporary.Target, temporary.Method)
         {
         }
 
         public SchedulerDelegate(object target, MethodInfo method)
+            : base(target, method)
         {
-            DirectTarget = target;
-            DirectMethod = method;
-            DirectDelegate = (EventHandler<TArg>)Delegate.CreateDelegate(typeof(EventHandler<TArg>), target, method);
         }
+
+        public SchedulerSchedule IndirectDelegate { get; private set; }
 
         public override void Invoke(object sender, TArg arg)
         {
@@ -38,21 +41,20 @@ namespace Diversions
                 }
             };
 
-            // Plug the Action argument into the input list.
-            object[] args = new object[MarshalInfo.MethodInputs.Length];
-            for (int i = 0; i < args.Length; i++)
-            {                
-                if (MarshalInfo.MethodInputs[i].Key == typeof(Action) && MarshalInfo.MethodInputs[i].Value == null)
-                {
-                    args[i] = action;
-                }
-                else
-                {
-                    args[i] = MarshalInfo.MethodInputs[i].Value;
-                }
-            }
+            IndirectDelegate((IScheduler)MarshalInfo.MethodInputs[0].Value, action);
+        }
 
-            MarshalInfo.MarshalMethod.Invoke(MarshalInfo.Marshaller, args);
+        protected override void OnMarshalInfoSet()
+        {
+            if (MarshalInfo == null)
+            {
+                IndirectDelegate = null;
+            }
+            else
+            {
+                // Create a delegate to the static Schedule method.
+                IndirectDelegate = (SchedulerSchedule)Delegate.CreateDelegate(typeof(SchedulerSchedule), MarshalInfo.MarshalMethod, true);
+            }
         }
     }
 }

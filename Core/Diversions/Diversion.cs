@@ -16,7 +16,7 @@ namespace Diversions
         {
             // Set the 'current thread' option as the default initially.
             AddDiverter(MarshalOption.CurrentThread, string.Empty, null, null, null, true);
-            AddDiverter(MarshalOption.RunTask, Task.Factory, "StartNew", new List<KeyValuePair<Type, object>>().AddKey(typeof(Action)).AddValue(CancellationToken.None).AddValue(TaskCreationOptions.DenyChildAttach).AddValue(TaskScheduler.Default), null, false);
+            AddDiverter(MarshalOption.RunTask, Task.Factory, "StartNew", new List<KeyValuePair<Type, object>>().AddKey(typeof(Action)).AddValue(CancellationToken.None).AddValue(TaskCreationOptions.DenyChildAttach).AddValue(TaskScheduler.Default));
             //AddDiverter(MarshalOption.StartNewTask, Task.Factory, "StartNew", new List<KeyValuePair<Type, object>>().AddKey(typeof(Action)));
         }
 
