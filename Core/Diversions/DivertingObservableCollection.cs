@@ -35,7 +35,7 @@ namespace Diversions.ObjectModel
         /// this class uses Diversions for notification events, event handlers may still
         /// be marshalled to other syncronization contexts as desired.
         /// </summary>
-        public SynchronizationContext DIspatcherSyncContext { get; set; }
+        public SynchronizationContext DispatcherSyncContext { get; set; }
 
         /// <inheritdoc cref="ObservableCollection{T}"/>
         public override event NotifyCollectionChangedEventHandler CollectionChanged
@@ -47,9 +47,9 @@ namespace Diversions.ObjectModel
                 // thread context.  Any event handlers that define their own marshalling mechanism
                 // will be dealt out appropriately by the MarshallingDelegate.
                 var added = _collectionChangedDelegate.Add(value);
-                if (DIspatcherSyncContext == null && added.MarshalInfo != null && added.MarshalInfo.SynchronizationContext != null)
+                if (DispatcherSyncContext == null && added.MarshalInfo != null && added.MarshalInfo.SynchronizationContext != null)
                 {
-                    DIspatcherSyncContext = added.MarshalInfo.SynchronizationContext;
+                    DispatcherSyncContext = added.MarshalInfo.SynchronizationContext;
                 }
             }
             remove { _collectionChangedDelegate.Remove(value); }
@@ -65,9 +65,9 @@ namespace Diversions.ObjectModel
                 // thread context.  Any event handlers that define their own marshalling mechanism
                 // will be dealt out appropriately by the MarshallingDelegate.
                 var added = _propertyChangedDelegate.Add(value);
-                if (DIspatcherSyncContext == null && added.MarshalInfo != null && added.MarshalInfo.SynchronizationContext != null)
+                if (DispatcherSyncContext == null && added.MarshalInfo != null && added.MarshalInfo.SynchronizationContext != null)
                 {
-                    DIspatcherSyncContext = added.MarshalInfo.SynchronizationContext;
+                    DispatcherSyncContext = added.MarshalInfo.SynchronizationContext;
                 }
             }
             remove { _propertyChangedDelegate.Remove(value); }
@@ -86,13 +86,13 @@ namespace Diversions.ObjectModel
         protected override void InsertItem(int index, TItem item)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
-            if (DIspatcherSyncContext == null)
+            if (DispatcherSyncContext == null)
             {
                 base.InsertItem(index, item);
             }
             else
             {
-                DIspatcherSyncContext.Send(new SendOrPostCallback((s) => base.InsertItem(index, item)), null);
+                DispatcherSyncContext.Send(new SendOrPostCallback((s) => base.InsertItem(index, item)), null);
             }
         }
 
@@ -100,13 +100,13 @@ namespace Diversions.ObjectModel
         protected override void MoveItem(int oldIndex, int newIndex)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
-            if (DIspatcherSyncContext == null)
+            if (DispatcherSyncContext == null)
             {
                 base.MoveItem(oldIndex, newIndex);
             }
             else
             {
-                DIspatcherSyncContext.Send(new SendOrPostCallback((s) => base.MoveItem(oldIndex, newIndex)), null);
+                DispatcherSyncContext.Send(new SendOrPostCallback((s) => base.MoveItem(oldIndex, newIndex)), null);
             }
         }
 
@@ -114,13 +114,13 @@ namespace Diversions.ObjectModel
         protected override void RemoveItem(int index)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
-            if (DIspatcherSyncContext == null)
+            if (DispatcherSyncContext == null)
             {
                 base.RemoveItem(index);
             }
             else
             {
-                DIspatcherSyncContext.Send(new SendOrPostCallback((s) => base.RemoveItem(index)), null);
+                DispatcherSyncContext.Send(new SendOrPostCallback((s) => base.RemoveItem(index)), null);
             }
         }
 
@@ -128,13 +128,13 @@ namespace Diversions.ObjectModel
         protected override void SetItem(int index, TItem item)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
-            if (DIspatcherSyncContext == null)
+            if (DispatcherSyncContext == null)
             {
                 base.SetItem(index, item);
             }
             else
             {
-                DIspatcherSyncContext.Send(new SendOrPostCallback((s) => base.SetItem(index, item)), null);
+                DispatcherSyncContext.Send(new SendOrPostCallback((s) => base.SetItem(index, item)), null);
             }
         }
 
@@ -142,13 +142,13 @@ namespace Diversions.ObjectModel
         protected override void ClearItems()
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
-            if (DIspatcherSyncContext == null)
+            if (DispatcherSyncContext == null)
             {
                 base.ClearItems();
             }
             else
             {
-                DIspatcherSyncContext.Send(new SendOrPostCallback((s) => base.ClearItems()), null);
+                DispatcherSyncContext.Send(new SendOrPostCallback((s) => base.ClearItems()), null);
             }
         }
     }
