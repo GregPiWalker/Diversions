@@ -1,0 +1,56 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+///<remarks>
+/// This is an auto-generated file.  Content is generated from DivertingBindableBase.txt and DivertingBindableBase.tt.
+/// Use of a T4 template allows two different class implementations that both share a single implementation of
+/// common <see cref="Prism.Mvvm.BindableBase"/> code that has been modified to offer the Diversion feature.
+/// Inheritance was not an option, as <see cref="ViewModelBase"/> must inherit from the abstract <see cref="DynamicObject"/>.
+///</remarks>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.CodeDom.Compiler;
+
+namespace Diversions.Mvvm
+{
+    /// <summary>
+    /// An implementation of <see cref="INotifyPropertyChanged"/> to simplify models and view models.
+    /// This is a derivation of BindableBase that uses <see cref="DiversionDelegate{TArg}"/>s.
+    /// Locally, the <see cref="INotifyPropertyChanged.PropertyChanged"/> event is raised synchronously on
+    /// the caller's thread, but each event observer may divert the flow to a thread of
+    /// their choosing.  
+    /// 
+    /// If the <see cref="DiversionAttribute"/> class' static 
+    /// <see cref="DiversionAttribute.DefaultDiverter"/> property is set for a UI Dispatcher,
+    /// then event handlers on the <see cref="INotifyPropertyChanged.PropertyChanged"/> event will be automatically
+    /// marshalled onto the dispatcher.  While .NET marshalls data bindings on <see cref="INotifyPropertyChanged"/>
+    /// to the UI thread internally, Diversions extend that automatic marshalling to 
+    /// UserControls and CustomControls that observe ViewModel/Model events.
+    /// </summary>
+    [GeneratedCodeAttribute("TextTemplatingFileGenerator", "1.0.0.0")]
+    public abstract class DivertingBindableBase : INotifyPropertyChanged
+    {
+        #region T4 Template: Begin Auto-Inserted Code
+
+<#
+// HERE IS WHERE THE TEXT FILE SOURCE CODE IS INSERTED
+string sharedFilePath = Host.ResolvePath(@"DivertingBindableBase.txt");
+string[] sharedSourceCode = File.ReadLines(sharedFilePath).ToArray();
+
+foreach (var lineOfCode in sharedSourceCode)
+{
+#>
+<#= lineOfCode #>
+<#
+}
+#>
+
+        #endregion T4 Template: End Auto-Inserted Code
+    }
+}

@@ -5,7 +5,8 @@ using System.Reflection;
 namespace Diversions
 {
     /// <summary>
-    /// 
+    /// An abstract delegate base class to support event diversions.  .NET does not allow
+    /// extension of their <see cref="Delegate"/> class, hence the lack of an ancestor here.
     /// </summary>
     /// <typeparam name="TArg"></typeparam>
     public abstract class DelegateBase<TArg>

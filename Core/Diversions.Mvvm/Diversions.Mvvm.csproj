@@ -5,7 +5,53 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="DivertingBindableBase.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DivertingBindableBase.tt</DependentUpon>
+    </None>
+    <None Include="ViewModelBase.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewModelBase.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Diversions\Diversions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DivertingBindableBase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DivertingBindableBase.cs</LastGenOutput>
+    </None>
+    <None Update="ViewModelBase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ViewModelBase.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DivertingBindableBase.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DivertingBindableBase.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ViewModelBase.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewModelBase.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ViewModelBaseT4.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewModelBaseT4.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
