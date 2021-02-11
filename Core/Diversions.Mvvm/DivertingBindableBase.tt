@@ -20,6 +20,8 @@ using System.CodeDom.Compiler;
 namespace Diversions.Mvvm
 {
     /// <summary>
+    /// An abstract base class to be used for Models or View Models.
+    ///
     /// An implementation of <see cref="INotifyPropertyChanged"/> to simplify models and view models.
     /// This is a derivation of BindableBase that uses <see cref="DiversionDelegate{TArg}"/>s.
     /// Locally, the <see cref="INotifyPropertyChanged.PropertyChanged"/> event is raised synchronously on

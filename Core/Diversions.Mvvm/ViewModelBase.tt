@@ -23,7 +23,8 @@ using log4net;
 namespace Diversions.Mvvm
 {
     /// <summary>
-    /// An abstract base class to be used for View Models.
+    /// The abstract base class to be used for View Models that have a 1:1 directed association to a Model.
+    ///
     /// This is a composite of <see cref="Prism.Mvvm.BindableBase"/> and <see cref="DynamicObject"/>.
     /// Extending <see cref="DynamicObject"/> allows this class to be a model proxy even for properties that it doesn't define.
     /// This approach prevents bind-through while avoiding the tedious and error-prone reimplementation of domain object properties.
@@ -62,7 +63,7 @@ namespace Diversions.Mvvm
         }
 
         /// <summary>
-        /// This could become a base class type
+        /// This could become a base class Type.
         /// </summary>
         public object Model
         {
@@ -229,7 +230,7 @@ foreach (var lineOfCode in sharedSourceCode)
 
             // Forward the event that came from the model.  If a binding targets the model, it
             // will just ignore this.  If a binding targets this object, this event will update it.
-            RaisePropertyChanged(args.PropertyName);
+            RaisePropertyChanged(args.PropertyName, sender);
         }
     }
 }

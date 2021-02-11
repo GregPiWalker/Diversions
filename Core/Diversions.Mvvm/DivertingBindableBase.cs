@@ -13,6 +13,8 @@ using System.CodeDom.Compiler;
 namespace Diversions.Mvvm
 {
     /// <summary>
+    /// An abstract base class to be used for Models or View Models.
+    ///
     /// An implementation of <see cref="INotifyPropertyChanged"/> to simplify models and view models.
     /// This is a derivation of BindableBase that uses <see cref="DiversionDelegate{TArg}"/>s.
     /// Locally, the <see cref="INotifyPropertyChanged.PropertyChanged"/> event is raised synchronously on
@@ -31,7 +33,7 @@ namespace Diversions.Mvvm
     {
         #region T4 Template: Begin Auto-Inserted Code
 
-        #region Taken from Prism.Mvvm.BindableBase
+        #region Taken verbatim from Prism.Mvvm.BindableBase
 
         /// <summary>
         /// Checks if a property already matches a desired value. Sets the property and
@@ -79,18 +81,7 @@ namespace Diversions.Mvvm
             return true;
         }
 
-        /// <summary>
-        /// Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <param name="propertyName">Name of the property used to notify listeners. This
-        /// value is optional and can be provided automatically when invoked from compilers
-        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion Taken from Prism.Mvvm.BindableBase
+        #endregion Taken verbatim from Prism.Mvvm.BindableBase
 
 
         #region BindableBase Re-writes with DiversionDelegate Support
@@ -109,12 +100,25 @@ namespace Diversions.Mvvm
         }
 
         /// <summary>
+        /// Raises this object's PropertyChanged event.
+        /// </summary>
+        /// <param name="propertyName">Name of the property used to notify listeners. This
+        /// value is optional and can be provided automatically when invoked from compilers
+        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
+        /// <param name="sender">The original sender of the event.</param>
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null, object sender = null)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName), sender);
+        }
+
+        /// <summary>
         /// Raises this object's PropertyChanged event using a <see cref="DiversionDelegate{TArg}"/>.
         /// </summary>
-        /// <param name="args">The PropertyChangedEventArgs</param>
-        protected void OnPropertyChanged(PropertyChangedEventArgs args)
+        /// <param name="args">The PropertyChangedEventArgs.</param>
+        /// <param name="sender">The original sender of the event.</param>
+        protected void OnPropertyChanged(PropertyChangedEventArgs args, object sender = null)
         {
-            _propertyChangedDelegate.Invoke(this, args);
+            _propertyChangedDelegate.Invoke(sender ?? this, args);
         }
 
         #endregion BindableBase Re-writes with DiversionDelegate Support

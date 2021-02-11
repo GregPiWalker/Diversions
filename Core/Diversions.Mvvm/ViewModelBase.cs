@@ -16,7 +16,8 @@ using log4net;
 namespace Diversions.Mvvm
 {
     /// <summary>
-    /// An abstract base class to be used for View Models.
+    /// The abstract base class to be used for View Models that have a 1:1 directed association to a Model.
+    ///
     /// This is a composite of <see cref="Prism.Mvvm.BindableBase"/> and <see cref="DynamicObject"/>.
     /// Extending <see cref="DynamicObject"/> allows this class to be a model proxy even for properties that it doesn't define.
     /// This approach prevents bind-through while avoiding the tedious and error-prone reimplementation of domain object properties.
@@ -55,7 +56,7 @@ namespace Diversions.Mvvm
         }
 
         /// <summary>
-        /// This could become a base class type
+        /// This could become a base class Type.
         /// </summary>
         public object Model
         {
@@ -157,7 +158,7 @@ namespace Diversions.Mvvm
 
         #region T4 Template: Begin Auto-Inserted Code
 
-        #region Taken from Prism.Mvvm.BindableBase
+        #region Taken verbatim from Prism.Mvvm.BindableBase
 
         /// <summary>
         /// Checks if a property already matches a desired value. Sets the property and
@@ -205,18 +206,7 @@ namespace Diversions.Mvvm
             return true;
         }
 
-        /// <summary>
-        /// Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <param name="propertyName">Name of the property used to notify listeners. This
-        /// value is optional and can be provided automatically when invoked from compilers
-        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion Taken from Prism.Mvvm.BindableBase
+        #endregion Taken verbatim from Prism.Mvvm.BindableBase
 
 
         #region BindableBase Re-writes with DiversionDelegate Support
@@ -235,12 +225,25 @@ namespace Diversions.Mvvm
         }
 
         /// <summary>
+        /// Raises this object's PropertyChanged event.
+        /// </summary>
+        /// <param name="propertyName">Name of the property used to notify listeners. This
+        /// value is optional and can be provided automatically when invoked from compilers
+        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
+        /// <param name="sender">The original sender of the event.</param>
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null, object sender = null)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName), sender);
+        }
+
+        /// <summary>
         /// Raises this object's PropertyChanged event using a <see cref="DiversionDelegate{TArg}"/>.
         /// </summary>
-        /// <param name="args">The PropertyChangedEventArgs</param>
-        protected void OnPropertyChanged(PropertyChangedEventArgs args)
+        /// <param name="args">The PropertyChangedEventArgs.</param>
+        /// <param name="sender">The original sender of the event.</param>
+        protected void OnPropertyChanged(PropertyChangedEventArgs args, object sender = null)
         {
-            _propertyChangedDelegate.Invoke(this, args);
+            _propertyChangedDelegate.Invoke(sender ?? this, args);
         }
 
         #endregion BindableBase Re-writes with DiversionDelegate Support
@@ -297,7 +300,7 @@ namespace Diversions.Mvvm
 
             // Forward the event that came from the model.  If a binding targets the model, it
             // will just ignore this.  If a binding targets this object, this event will update it.
-            RaisePropertyChanged(args.PropertyName);
+            RaisePropertyChanged(args.PropertyName, sender);
         }
     }
 }
