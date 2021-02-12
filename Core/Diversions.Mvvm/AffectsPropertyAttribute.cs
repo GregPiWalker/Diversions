@@ -8,13 +8,13 @@ namespace Diversions.Mvvm
     /// See: https://docs.microsoft.com/en-us/archive/msdn-magazine/2010/july/design-patterns-problems-and-solutions-with-model-view-viewmodel
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class AffectsDerivedPropertyAttribute : Attribute
+    public sealed class AffectsPropertyAttribute : Attribute
     {
-        public AffectsDerivedPropertyAttribute(string otherPropertyName)
+        public AffectsPropertyAttribute(string affectedPropertyName)
         {
-            DerivedProperty = otherPropertyName;
+            AffectedProperty = affectedPropertyName;
         }
 
-        public string DerivedProperty { get; private set; }
+        public string AffectedProperty { get; private set; }
     }
 }

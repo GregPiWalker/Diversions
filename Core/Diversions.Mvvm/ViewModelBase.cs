@@ -34,7 +34,7 @@ namespace Diversions.Mvvm
     /// <see cref="DiversionAttribute.DefaultDiverter"/> property is set for a UI Dispatcher,
     /// then event handlers on the <see cref="INotifyPropertyChanged.PropertyChanged"/> event will be automatically
     /// marshalled onto the dispatcher.  While .NET marshalls data bindings on <see cref="INotifyPropertyChanged"/>
-    /// to the UI thread internally, Diversions extend that automatic marshalling to 
+    /// to the UI thread internally, Diversions extend that automatic marshalling to
     /// UserControls and CustomControls that observe ViewModel/Model events.
     /// </summary>
     [GeneratedCodeAttribute("TextTemplatingFileGenerator", "1.0.0.0")]
@@ -43,6 +43,7 @@ namespace Diversions.Mvvm
         protected readonly Dictionary<string, object> _proxyProperties = new Dictionary<string, object>();
         protected readonly ILog _logger;
         protected object _model;
+        protected Type _modelType;
 
         protected ViewModelBase(object model)
         {
@@ -64,6 +65,11 @@ namespace Diversions.Mvvm
             protected set
             {
                 SubscribeToModel(false);
+
+                // This needs to be set before SetProperty is called because the
+                // call stack will use the value before SetProperty returns.
+                _modelType = (value == null) ? null : value.GetType();
+
                 if (SetProperty(ref _model, value))
                 {
                     SubscribeToModel(true);
@@ -77,10 +83,13 @@ namespace Diversions.Mvvm
         public bool EnablePropertyCaching { get; set; }
 
 
-        #region DynamicObject overrides
+        #region DynamicObject overrides with Proxy Property support
 
         /// <summary>
-        /// <inheritdoc cref="DynamicObject"/>
+        /// Override of <see cref="DynamicObject.TryGetMember(GetMemberBinder, out object)"/> that gives
+        /// this class a Proxy Property capability.  If this class' Model has the desired property,
+        /// then the get operation will propagate to the Model object.  However, if caching is
+        /// enabled here, then the this will first attempt to get a value from the local cache.
         /// </summary>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
@@ -99,14 +108,14 @@ namespace Diversions.Mvvm
                 return true;
             }
 
-            PropertyInfo property = Model.GetType().GetProperty(propertyName);
+            PropertyInfo property = _modelType.GetProperty(propertyName);
             if (property == null || property.CanRead == false)
             {
                 result = null;
                 return false;
             }
 
-            result = GetProxyPropertyValue(propertyName);
+            result = GetProxyPropertyValue(property);
 
             // Only update the cached value here if the model does not notify.  If the model does notify,
             // then we'll update the cached value in the notify handler or the proxy setter.
@@ -122,7 +131,10 @@ namespace Diversions.Mvvm
         }
 
         /// <summary>
-        /// <inheritdoc cref="DynamicObject"/>
+        /// Override of <see cref="DynamicObject.TrySetMember(SetMemberBinder, object)"/> that gives
+        /// this class a Proxy Property capability.  If this class' Model has the desired property,
+        /// then the set operation will propagate to the Model object.  If that succeeds and caching is
+        /// enabled here, then the value will also be saved in a local cache.
         /// </summary>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
@@ -132,7 +144,7 @@ namespace Diversions.Mvvm
             }
 
             string propertyName = binder.Name;
-            PropertyInfo property = Model.GetType().GetProperty(propertyName);
+            PropertyInfo property = _modelType.GetProperty(propertyName);
 
             if (property == null || property.CanWrite == false)
             {
@@ -142,23 +154,26 @@ namespace Diversions.Mvvm
             property.SetValue(Model, value, null);
 
             // Only cache the value and raise change events here if the underlying model does not notify.
-            // Otherwise, the event and new value will be handled in this class' notify handler.
+            // Otherwise, the event and new value will be handled in this class' notify handler, HandleModelPropertyChanged.
             if (EnablePropertyCaching && !(Model is INotifyPropertyChanged))
             {
                 // Now cache the property and it's value locally.  Later we'll look in the cache first.
                 _proxyProperties[propertyName] = value;
                 RaisePropertyChanged(propertyName);
+
+                // Now propagate the change to any affected local properties.
+                NotifyAffectedProperties(property);
             }
 
             return true;
         }
 
-        #endregion DynamicObject overrides
+        #endregion DynamicObject overrides with Proxy Property support
         
 
         #region T4 Template: Begin Auto-Inserted Code
 
-        #region Taken verbatim from Prism.Mvvm.BindableBase
+        #region Prism.Mvvm.BindableBase Re-writes with AffectsPropertyAttribute Support
 
         /// <summary>
         /// Checks if a property already matches a desired value. Sets the property and
@@ -178,6 +193,9 @@ namespace Diversions.Mvvm
 
             storage = value;
             RaisePropertyChanged(propertyName);
+
+            // Now propagate the change to any affected local properties.
+            NotifyAffectedProperties(GetType().GetProperty(propertyName));
 
             return true;
         }
@@ -203,13 +221,34 @@ namespace Diversions.Mvvm
             onChanged?.Invoke();
             RaisePropertyChanged(propertyName);
 
+            // Now propagate the change to any affected local properties.
+            NotifyAffectedProperties(GetType().GetProperty(propertyName));
+
             return true;
         }
 
-        #endregion Taken verbatim from Prism.Mvvm.BindableBase
+        /*
+        /// <summary>
+        /// Raises this object's PropertyChanged event.
+        /// Beware that this will also raise notifications for any local properties decorated as 'affected by'.
+        /// </summary>
+        /// <param name="propertyName">Name of the property used to notify listeners. This
+        /// value is optional and can be provided automatically when invoked from compilers
+        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
+        /// <param name="sender">The original sender of the event.</param>
+        private void RaisePropertyChanged(PropertyInfo property, object sender = null)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(property.Name), sender);
+
+            // Now propagate the change to any affected local properties.
+            NotifyAffectedProperties(property);
+        }
+        */
+
+        #endregion Prism.Mvvm.BindableBase Re-writes with AffectsPropertyAttribute Support
 
 
-        #region BindableBase Re-writes with DiversionDelegate Support
+        #region Prism.Mvvm.BindableBase Re-writes with DiversionDelegate Support
 
         private readonly DiversionDelegate<PropertyChangedEventArgs> _propertyChangedDelegate = new DiversionDelegate<PropertyChangedEventArgs>();
 
@@ -246,15 +285,27 @@ namespace Diversions.Mvvm
             _propertyChangedDelegate.Invoke(sender ?? this, args);
         }
 
-        #endregion BindableBase Re-writes with DiversionDelegate Support
+        #endregion Prism.Mvvm.BindableBase Re-writes with DiversionDelegate Support
+
+        /// <summary>
+        /// Raise notifications for any local properties that are decorated as 'affected by'
+        /// the given property change.
+        /// </summary>
+        /// <param name="property"></param>
+        private void NotifyAffectedProperties(PropertyInfo property)
+        {
+            var affectedProps = property.GetCustomAttributes(typeof(AffectsPropertyAttribute), true);
+            foreach (AffectsPropertyAttribute affectedProp in affectedProps)
+            {
+                RaisePropertyChanged(affectedProp.AffectedProperty);
+            }
+        }
 
         #endregion T4 Template: End Auto-Inserted Code
 
 
-        public object GetProxyPropertyValue(string propertyName)
+        public object GetProxyPropertyValue(PropertyInfo property)
         {
-            PropertyInfo property = Model.GetType().GetProperty(propertyName);
-
             if (property == null || property.CanRead == false)
             {
                 return null;
@@ -290,17 +341,30 @@ namespace Diversions.Mvvm
             }
         }
 
+        /// <summary>
+        /// This handler propagates property change notifications that originate from the Model.
+        /// First the immediate change is propagated, then notifications are propagated for any
+        /// properties that are decorated as 'affected by'.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void HandleModelPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            // This only happens if the Model is INotifyPropertyChanged, so definitely add/update any cached value now.
+            PropertyInfo property = _modelType.GetProperty(args.PropertyName);
+
+            // This method is only invoked if the Model is INotifyPropertyChanged.
+            // Therefore, it's the correct time to add/update any cached value.
             if (EnablePropertyCaching/* && _proxyProperties.ContainsKey(args.PropertyName)*/)
             {
-                _proxyProperties[args.PropertyName] = GetProxyPropertyValue(args.PropertyName);
+                _proxyProperties[args.PropertyName] = GetProxyPropertyValue(property);
             }
 
             // Forward the event that came from the model.  If a binding targets the model, it
             // will just ignore this.  If a binding targets this object, this event will update it.
             RaisePropertyChanged(args.PropertyName, sender);
+
+            // Now propagate the change to any affected local properties.
+            NotifyAffectedProperties(property);
         }
     }
 }
