@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.CodeDom.Compiler;
-using System.Reflection;
 
 namespace Diversions.Mvvm
 {
@@ -34,7 +33,7 @@ namespace Diversions.Mvvm
     {
         #region T4 Template: Begin Auto-Inserted Code
 
-        #region Prism.Mvvm.BindableBase Re-writes with AffectsPropertyAttribute Support
+        #region Taken verbatim from Prism.Mvvm.BindableBase
 
         /// <summary>
         /// Checks if a property already matches a desired value. Sets the property and
@@ -54,9 +53,6 @@ namespace Diversions.Mvvm
 
             storage = value;
             RaisePropertyChanged(propertyName);
-
-            // Now propagate the change to any affected local properties.
-            NotifyAffectedProperties(GetType().GetProperty(propertyName));
 
             return true;
         }
@@ -82,31 +78,10 @@ namespace Diversions.Mvvm
             onChanged?.Invoke();
             RaisePropertyChanged(propertyName);
 
-            // Now propagate the change to any affected local properties.
-            NotifyAffectedProperties(GetType().GetProperty(propertyName));
-
             return true;
         }
 
-        /*
-        /// <summary>
-        /// Raises this object's PropertyChanged event.
-        /// Beware that this will also raise notifications for any local properties decorated as 'affected by'.
-        /// </summary>
-        /// <param name="propertyName">Name of the property used to notify listeners. This
-        /// value is optional and can be provided automatically when invoked from compilers
-        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-        /// <param name="sender">The original sender of the event.</param>
-        private void RaisePropertyChanged(PropertyInfo property, object sender = null)
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(property.Name), sender);
-
-            // Now propagate the change to any affected local properties.
-            NotifyAffectedProperties(property);
-        }
-        */
-
-        #endregion Prism.Mvvm.BindableBase Re-writes with AffectsPropertyAttribute Support
+        #endregion Taken verbatim from Prism.Mvvm.BindableBase
 
 
         #region Prism.Mvvm.BindableBase Re-writes with DiversionDelegate Support
@@ -147,20 +122,6 @@ namespace Diversions.Mvvm
         }
 
         #endregion Prism.Mvvm.BindableBase Re-writes with DiversionDelegate Support
-
-        /// <summary>
-        /// Raise notifications for any local properties that are decorated as 'affected by'
-        /// the given property change.
-        /// </summary>
-        /// <param name="property"></param>
-        private void NotifyAffectedProperties(PropertyInfo property)
-        {
-            var affectedProps = property.GetCustomAttributes(typeof(AffectsPropertyAttribute), true);
-            foreach (AffectsPropertyAttribute affectedProp in affectedProps)
-            {
-                RaisePropertyChanged(affectedProp.AffectedProperty);
-            }
-        }
 
         #endregion T4 Template: End Auto-Inserted Code
     }
