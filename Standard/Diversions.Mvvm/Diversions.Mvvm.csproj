@@ -44,8 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Core\Diversions.Mvvm\AffectsDerivedPropertyAttribute.cs">
-      <Link>AffectsDerivedPropertyAttribute.cs</Link>
+    <Compile Include="..\..\Core\Diversions.Mvvm\AffectsPropertyAttribute.cs">
+      <Link>AffectsPropertyAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\Core\Diversions.Mvvm\DivertingBindableBase.cs">
       <Link>DivertingBindableBase.cs</Link>

@@ -81,6 +81,26 @@ namespace Diversions.Mvvm
             return true;
         }
 
+        /// <summary>
+        /// Raises this object's PropertyChanged event.
+        /// </summary>
+        /// <param name="propertyName">Name of the property used to notify listeners. This
+        /// value is optional and can be provided automatically when invoked from compilers
+        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Raises this object's PropertyChanged event using a <see cref="DiversionDelegate{TArg}"/>.
+        /// </summary>
+        /// <param name="args">The PropertyChangedEventArgs.</param>
+        protected void OnPropertyChanged(PropertyChangedEventArgs args)
+        {
+            _propertyChangedDelegate.Invoke(this, args);
+        }
+
         #endregion Taken verbatim from Prism.Mvvm.BindableBase
 
 
@@ -97,28 +117,6 @@ namespace Diversions.Mvvm
         {
             add { _propertyChangedDelegate.Add(value); }
             remove { _propertyChangedDelegate.Remove(value); }
-        }
-
-        /// <summary>
-        /// Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <param name="propertyName">Name of the property used to notify listeners. This
-        /// value is optional and can be provided automatically when invoked from compilers
-        /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-        /// <param name="sender">The original sender of the event.</param>
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null, object sender = null)
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName), sender);
-        }
-
-        /// <summary>
-        /// Raises this object's PropertyChanged event using a <see cref="DiversionDelegate{TArg}"/>.
-        /// </summary>
-        /// <param name="args">The PropertyChangedEventArgs.</param>
-        /// <param name="sender">The original sender of the event.</param>
-        protected void OnPropertyChanged(PropertyChangedEventArgs args, object sender = null)
-        {
-            _propertyChangedDelegate.Invoke(sender ?? this, args);
         }
 
         #endregion Prism.Mvvm.BindableBase Re-writes with DiversionDelegate Support

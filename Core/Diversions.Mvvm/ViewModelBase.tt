@@ -258,7 +258,10 @@ foreach (var lineOfCode in sharedSourceCode)
 
             // Forward the event that came from the model.  If a binding targets the model, it
             // will just ignore this.  If a binding targets this object, this event will update it.
-            RaisePropertyChanged(args.PropertyName, sender);
+            // NOTE: This must usurp the original sender in the new event or else a binding to this as
+            //       a DynamicObject will not get updated via the TryGetMember call.
+            //       (.NET code must use the event sender as the dynamic object)
+            RaisePropertyChanged(args.PropertyName);
 
             // Now propagate the change to any affected local properties.
             NotifyAffectedModelProperties(modelProperty);
