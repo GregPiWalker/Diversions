@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace Diversions.Mvvm.Tests
 {
-    public class ModelBaseTestUnit : ModelBase
+    public class ModelBaseTestUnit : DivertingBindableBase
     {
         private object _modelProperty;
 

@@ -1,5 +1,4 @@
-﻿using Rhino.Mocks;
-using System;
+﻿using System;
 
 namespace Diversions.Mvvm.Tests
 {
