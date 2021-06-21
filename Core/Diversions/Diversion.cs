@@ -18,7 +18,7 @@ namespace Diversions
         static Diversion()
         {
             // Set the 'current thread' option as the default initially.
-            AddDiverter(MarshalOption.CurrentThread, string.Empty, null, null, null, true);
+            AddDiverter(MarshalOption.CurrentThread, string.Empty, null, null, true);
             AddDiverter(MarshalOption.RunTask, Task.Factory, "StartNew", new List<KeyValuePair<Type, object>>().AddKey(typeof(Action)).AddValue(CancellationToken.None).AddValue(TaskCreationOptions.DenyChildAttach).AddValue(TaskScheduler.Default));
             //TODO: make this a ThreadPool diverter?
             //AddDiverter(MarshalOption.StartNewTask, Task.Factory, "StartNew", new List<KeyValuePair<Type, object>>().AddKey(typeof(Action)));
@@ -46,14 +46,14 @@ namespace Diversions
         /// <param name="marshalMethodInputs"></param>
         /// <param name="syncContext"></param>
         /// <param name="makeDefault"></param>
-        public static void AddDiverter(string optionKey, object marshallerInstance, string marshalMethod, List<KeyValuePair<Type, object>> marshalMethodInputs, SynchronizationContext syncContext = null, bool makeDefault = false)
+        public static void AddDiverter(string optionKey, object marshallerInstance, string marshalMethod, List<KeyValuePair<Type, object>> marshalMethodInputs, bool makeDefault = false)
         {
             try
             {
                 MarshalInfo marshaller = null;
                 if (marshallerInstance != null && !string.IsNullOrEmpty(marshalMethod))
                 {
-                    marshaller = new MarshalInfo(marshallerInstance, marshalMethod, marshalMethodInputs == null ? Array.Empty<KeyValuePair<Type, object>>() : marshalMethodInputs.ToArray(), syncContext);
+                    marshaller = new MarshalInfo(marshallerInstance, marshalMethod, marshalMethodInputs == null ? Array.Empty<KeyValuePair<Type, object>>() : marshalMethodInputs.ToArray());
                 }
 
                 _Marshallers.Add(optionKey, marshaller);
@@ -78,14 +78,14 @@ namespace Diversions
         /// <param name="marshalMethodInputs"></param>
         /// <param name="syncContext">The synchronizationContext with which to raise </param>
         /// <param name="makeDefault"></param>
-        public static void AddDiverter(MarshalOption marshalOption, object marshallerInstance, string marshalMethod, List<KeyValuePair<Type, object>> marshalMethodInputs, SynchronizationContext syncContext = null, bool makeDefault = false)
+        public static void AddDiverter(MarshalOption marshalOption, object marshallerInstance, string marshalMethod, List<KeyValuePair<Type, object>> marshalMethodInputs, bool makeDefault = false)
         {
             if (marshalOption == MarshalOption.UserDefined)
             {
                 throw new InvalidOperationException($"User defined marshal options must call {nameof(AddDiverter)} passing a string argument into the first parameter.");
             }
 
-            AddDiverter(marshalOption.ToString(), marshallerInstance, marshalMethod, marshalMethodInputs, syncContext, makeDefault);
+            AddDiverter(marshalOption.ToString(), marshallerInstance, marshalMethod, marshalMethodInputs, makeDefault);
         }
 
         internal static MarshalInfo GetInfo(MarshalOption option)

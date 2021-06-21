@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 
 namespace Diversions
 {
@@ -16,12 +15,10 @@ namespace Diversions
         /// <param name="instance"></param>
         /// <param name="targetMethod"></param>
         /// <param name="methodInputs"></param>
-        /// <param name="syncContext"></param>
-        internal MarshalInfo(object instance, string targetMethod, KeyValuePair<Type, object>[] methodInputs, SynchronizationContext syncContext = null)
+        internal MarshalInfo(object instance, string targetMethod, KeyValuePair<Type, object>[] methodInputs)
         {
             Marshaller = instance;
             MethodInputs = methodInputs;
-            SynchronizationContext = syncContext;
             Type[] inputTypes = methodInputs.Select(kp => kp.Key).ToArray();
 
             MarshalMethod = Marshaller.GetType().GetMethod(targetMethod, inputTypes);
@@ -31,11 +28,6 @@ namespace Diversions
                 MarshalMethod = (Marshaller as Type).GetMethod(targetMethod, BindingFlags.Public | BindingFlags.Static, null, inputTypes, null);
             }
         }
-
-        /// <summary>
-        /// Gets the SynchronizationContext upon which the Diverter's event handler will be marshalled.
-        /// </summary>
-        public SynchronizationContext SynchronizationContext { get; private set; }
 
         public KeyValuePair<Type, object>[] MethodInputs { get; private set; }
 
