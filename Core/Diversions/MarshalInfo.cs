@@ -32,6 +32,9 @@ namespace Diversions
             }
         }
 
+        /// <summary>
+        /// Gets the SynchronizationContext upon which the Diverter's event handler will be marshalled.
+        /// </summary>
         public SynchronizationContext SynchronizationContext { get; private set; }
 
         public KeyValuePair<Type, object>[] MethodInputs { get; private set; }

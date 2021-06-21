@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Diversions
 {
+    /// <summary>
+    /// This class has an invocation list and acts like a MultiCastDelegate, so multiple delegates can
+    /// be added to it where each delegate marshals its work according to its diversion marshal option.
+    /// </summary>
+    /// <typeparam name="TArg"></typeparam>
     public class DiversionDelegate<TArg>
     {
         private static readonly ILog _Logger = LogManager.GetLogger(typeof(DiversionDelegate<TArg>));
@@ -69,7 +74,7 @@ namespace Diversions
             var paramType = toAdd.Method.GetParameters().Last().ParameterType;
             if (paramType != typeof(TArg))
             {
-                throw new ArgumentException($"toAdd: wrong delegate type.  Got {paramType.Name}, expected {typeof(TArg).Name}.");
+                throw new ArgumentException($"Wrong delegate type supplied.  Got {paramType.Name}, expected {typeof(TArg).Name}.", "toAdd");
             }
 
             DelegateBase<TArg> newDel = null;
@@ -121,7 +126,7 @@ namespace Diversions
                     }
                     else
                     {
-                        throw new Exception("Unknown user-defined delegate type.");
+                        throw new Exception("Unknown user-defined delegate type.  Make sure a Diverter was defined for it in Diversion's static Diverter set.");
                     }
                     break;
             }

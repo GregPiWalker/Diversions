@@ -8,17 +8,17 @@ namespace Diversions
     /// An abstract delegate base class to support event diversions.  .NET does not allow
     /// extension of their <see cref="Delegate"/> class, hence the lack of an ancestor here.
     /// </summary>
-    /// <typeparam name="TArg"></typeparam>
-    public abstract class DelegateBase<TArg>
+    /// <typeparam name="TEvArg">The type of the generic EventArgs.</typeparam>
+    public abstract class DelegateBase<TEvArg>
     {
-        protected static readonly ILog _Logger = LogManager.GetLogger(typeof(DelegateBase<TArg>));
+        protected static readonly ILog _Logger = LogManager.GetLogger(typeof(DelegateBase<TEvArg>));
         private MarshalInfo _marshalInfo;
 
         protected DelegateBase(object target, MethodInfo method)
         {
             DirectTarget = target;
             DirectMethod = method;
-            DirectDelegate = (EventHandler<TArg>)Delegate.CreateDelegate(typeof(EventHandler<TArg>), target, method);
+            DirectDelegate = (EventHandler<TEvArg>)Delegate.CreateDelegate(typeof(EventHandler<TEvArg>), target, method);
         }
 
         internal MarshalInfo MarshalInfo 
@@ -34,7 +34,7 @@ namespace Diversions
         /// <summary>
         /// 
         /// </summary>
-        public EventHandler<TArg> DirectDelegate { get; private set; }
+        public EventHandler<TEvArg> DirectDelegate { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="MethodInfo"/> represented by the delegate.
@@ -54,7 +54,7 @@ namespace Diversions
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="arg"></param>
-        public abstract void Invoke(object sender, TArg arg);
+        public abstract void Invoke(object sender, TEvArg arg);
 
         /// <summary>
         /// 

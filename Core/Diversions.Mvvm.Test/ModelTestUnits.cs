@@ -18,7 +18,14 @@ namespace Diversions.Mvvm.Tests
         /// </summary>
         public virtual event PropertyChangedEventHandler PropertyChangedTestable;
 
-        public virtual object ModelProperty { get => _modelProperty; set => SetProperty(ref _modelProperty, value); }
+        /// <summary>
+        /// A real defined property.
+        /// </summary>
+        public virtual object ModelProperty
+        {
+            get => _modelProperty;
+            set => SetProperty(ref _modelProperty, value);
+        }
 
         public virtual object Method()
         {
@@ -42,6 +49,9 @@ namespace Diversions.Mvvm.Tests
         public event EventHandler ModelPropertyGetterCalled;
         public event EventHandler ModelPropertySetterCalled;
 
+        /// <summary>
+        /// A real defined property.
+        /// </summary>
         public virtual object ModelProperty 
         {
             get

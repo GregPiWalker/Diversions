@@ -18,7 +18,14 @@ namespace Diversions.Mvvm.Tests
         /// </summary>
         public virtual event PropertyChangedEventHandler PropertyChangedTestable;
 
-        public object RealProxyProperty { get => (Model as ModelBaseTestUnit).ModelProperty; set => (Model as ModelBaseTestUnit).ModelProperty = value; }
+        /// <summary>
+        /// A proxy for a property that really exists on the model.
+        /// </summary>
+        public object RealProxyProperty
+        {
+            get => (Model as ModelBaseTestUnit).ModelProperty;
+            set => (Model as ModelBaseTestUnit).ModelProperty = value;
+        }
 
         /// <summary>
         /// Provides a concrete implementation for a dynamic mock object to invoke.
@@ -45,7 +52,14 @@ namespace Diversions.Mvvm.Tests
         /// </summary>
         public virtual event PropertyChangedEventHandler PropertyChangedTestable;
 
-        public object RealProxyProperty { get => (Model as ModelTestUnit).ModelProperty; set => (Model as ModelTestUnit).ModelProperty = value; }
+        /// <summary>
+        /// A proxy for a property that really exists on the model.
+        /// </summary>
+        public object RealProxyProperty
+        { 
+            get => (Model as ModelTestUnit).ModelProperty; 
+            set => (Model as ModelTestUnit).ModelProperty = value;
+        }
 
         /// <summary>
         /// Provides a concrete implementation for a dynamic mock object to invoke.
