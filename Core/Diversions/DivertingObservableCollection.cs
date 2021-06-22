@@ -10,21 +10,22 @@ namespace Diversions.ObjectModel
     /// <summary>
     /// This class is a derivation of the <see cref="ObservableCollection{T}"/>.
     /// It marshals it's CRUD operations onto the application domain's <see cref="SynchronizationContext"/>,
-    /// if one exists.  It obtains the SynchronizationContext indirectly via the use of <see cref="DiversionDelegate{TArg}"/>s
-    /// for the <see cref="INotifyCollectionChanged.CollectionChanged"/> and <see cref="INotifyPropertyChanged.PropertyChanged"/>
-    /// events.  Because <see cref="DiversionDelegate{TArg}"/>s are used for the events, this class is also suitable for
-    /// crossing thread boundaries at the behest of the invoked EventHandlers.
+    /// if one exists.  It obtains the SynchronizationContext indirectly via the static <see cref="DispatcherDelegates"/>
+    /// class; therefore, an application must call <see cref="DispatcherDelegates.CreateInvokeDelegate"/> sometime during
+    /// set-up in order for thread marshalling to occur here.  Because <see cref="DiversionDelegate{TArg}"/>s are used 
+    /// for the events, this class is also suitable for crossing thread boundaries at the behest of the invoked EventHandlers.
     /// Furthermore, if the <see cref="DiversionAttribute"/> classes static <see cref="DiversionAttribute.DefaultDiverter"/>
     /// property is set for a UI Dispatcher, then event handlers on the <see cref="INotifyPropertyChanged.PropertyChanged"/>
     /// event will be marshalled onto the dispatcher automatically.
     /// 
-    /// NOTE: There are various implementations of <see cref="ObservableCollection{T}"/>s on the web that try to do
-    /// the same thing, but are flawed.  They do not override the CRUD operations; instead they simply invoke the
+    /// NOTE: There are various implementations of <see cref="ObservableCollection{T}"/>s on the web that try 
+    /// automatically perform their <see cref="CollectionChanged"/> notifications on the UI thread, but they are flawed.
+    /// They do not override the CRUD operations; instead they simply invoke the
     /// <see cref="INotifyCollectionChanged.CollectionChanged"/> event on the application Dispatcher or send the
     /// invocation to the SynchronizationContext.  Superficially, this works but it creates a race-condition that
     /// can cause an <see cref="Windows.Data.CollectionView"/> to fail while validating collection changes
     /// inside its ValidateCollectionChangedEventArgs method.  
-    /// This implementation does not create that race-condition.
+    /// This implementation has no such race-condition flaw.
     /// </summary>
     /// <typeparam name="TItem">The type of the contained items.</typeparam>
     public class DivertingObservableCollection<TItem> : ObservableCollection<TItem>
@@ -50,25 +51,80 @@ namespace Diversions.ObjectModel
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="SynchronizationContext"/> for the domain Dispatcher.
-        /// This is used to marshall CRUD operations onto a Dispatcher Thread.  Because
-        /// this class uses Diversions for notification events, event handlers may still
-        /// be marshalled to other syncronization contexts as desired.
+        /// Occurs when the collection contents change.
+        /// This event uses DiversionDelegates, so event handlers may still
+        /// be marshalled to other syncronization contexts as defined by Diversion attributes.
         /// </summary>
-        public SynchronizationContext DispatcherSyncContext { get; set; }
-
-        /// <inheritdoc cref="ObservableCollection{T}"/>
         public override event NotifyCollectionChangedEventHandler CollectionChanged
         {
             add { _collectionChangedDelegate.Add(value); }
             remove { _collectionChangedDelegate.Remove(value); }
         }
 
-        /// <inheritdoc cref="ObservableCollection{T}"/>
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// This event uses DiversionDelegates, so event handlers may still
+        /// be marshalled to other syncronization contexts as defined by Diversion attributes.
+        /// </summary>
         protected override event PropertyChangedEventHandler PropertyChanged
         {
             add { _propertyChangedDelegate.Add(value); }
             remove { _propertyChangedDelegate.Remove(value); }
+        }
+
+        /// <summary>
+        /// Adds an object to the end of the <see cref="Collection{T}"/>.
+        /// Provided that <see cref="DispatcherDelegates.CreateInvokeDelegate"/>
+        /// has been invoked at least once prior to this call, then
+        /// element addition automatically occurs on the main application thread.
+        /// </summary>
+        /// <param name="item">The object to be added to the end of the collection.  The value can be null for reference types.</param>
+        public new void Add(TItem item)
+        {
+            // This is merely overridden in order to provide custom meta-data.
+            base.Add(item);
+        }
+
+        /// <summary>
+        /// Removes the first occurrence of a specified object from the <see cref="Collection{T}"/>.
+        /// Provided that <see cref="DispatcherDelegates.CreateInvokeDelegate"/>
+        /// has been invoked at least once prior to this call, then
+        /// element removal automatically occurs on the main application thread. 
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <param name="item">The item to remove.</param>
+        /// <returns><c>true</c> if the item was removed; <c>false</c> otherwise.  This also returns
+        /// false if the specified object was not found.</returns>
+        public new bool Remove(TItem item)
+        {
+            // This is merely overridden in order to provide custom meta-data.
+            return base.Remove(item);
+        }
+
+        /// <summary>
+        /// Removes the element at the specified index of the <see cref="Collection{T}"/>.
+        /// Provided that <see cref="DispatcherDelegates.CreateInvokeDelegate"/>
+        /// has been invoked at least once prior to this call, then
+        /// element removal automatically occurs on the main application thread.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <param name="index">The zero-based index of the element to remove.</param>
+        public new void RemoveAt(int index)
+        {
+            // This is merely overridden in order to provide custom meta-data.
+            base.RemoveAt(index);
+        }
+
+        /// <summary>
+        /// Removes all elements from the <see cref="Collection{T}"/>.
+        /// Provided that <see cref="DispatcherDelegates.CreateInvokeDelegate"/>
+        /// has been invoked at least once prior to this call, then
+        /// element removal automatically occurs on the main application thread.
+        /// </summary>
+        public new void Clear()
+        {
+            // This is merely overridden in order to provide custom meta-data.
+            base.Clear();
         }
 
         /// <inheritdoc cref="ObservableCollection{T}"/>

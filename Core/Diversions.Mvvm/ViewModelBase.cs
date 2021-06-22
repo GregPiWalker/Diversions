@@ -38,12 +38,12 @@ namespace Diversions.Mvvm
     /// UserControls and CustomControls that observe ViewModel/Model events.
     /// </summary>
     [GeneratedCodeAttribute("TextTemplatingFileGenerator", "1.0.0.0")]
-    public abstract class ViewModelBase : DynamicObject, INotifyPropertyChanged
+    public abstract class ViewModelBase : DynamicObject, INotifyPropertyChanged, IDisposable
     {
         protected readonly Dictionary<string, object> _proxyProperties = new Dictionary<string, object>();
         protected readonly ILog _logger;
-        protected object _model;
         protected Type _modelType;
+        private object _model;
 
         protected ViewModelBase(object model)
         {
@@ -81,6 +81,13 @@ namespace Diversions.Mvvm
         /// Right now, caching is not thread-safe.
         /// </summary>
         public bool EnablePropertyCaching { get; set; }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
 
 
         #region DynamicObject overrides with Proxy Property support
@@ -279,6 +286,18 @@ namespace Diversions.Mvvm
             return property.GetValue(Model, null);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            Model = null;
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~ViewModelBase()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
         /// <summary>
         /// Subscribe to the model object.
         /// If the model raises property changed events, propagate them.
@@ -291,10 +310,8 @@ namespace Diversions.Mvvm
         /// <param name="subscribe"></param>
         private void SubscribeToModel(bool subscribe)
         {
-            if (_model is INotifyPropertyChanged)
+            if (_model is INotifyPropertyChanged propertyNotifier)
             {
-                var propertyNotifier = _model as INotifyPropertyChanged;
-
                 if (subscribe)
                 {
                     propertyNotifier.PropertyChanged += HandleModelPropertyChanged;
