@@ -127,7 +127,7 @@ namespace Diversions.ObjectModel
             base.Clear();
         }
 
-        /// <inheritdoc cref="ObservableCollection{T}"/>
+        /// <inheritdoc cref="ObservableCollection{T}.OnCollectionChanged"/>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             using (BlockReentrancy())
@@ -136,7 +136,7 @@ namespace Diversions.ObjectModel
             }
         }
 
-        /// <inheritdoc cref="ObservableCollection{T}"/>
+        /// <inheritdoc cref="ObservableCollection{T}.InsertItem"/>
         protected override void InsertItem(int index, TItem item)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
@@ -150,7 +150,7 @@ namespace Diversions.ObjectModel
             }
         }
 
-        /// <inheritdoc cref="ObservableCollection{T}"/>
+        /// <inheritdoc cref="ObservableCollection{T}.MoveItem"/>
         protected override void MoveItem(int oldIndex, int newIndex)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
@@ -164,7 +164,7 @@ namespace Diversions.ObjectModel
             }
         }
 
-        /// <inheritdoc cref="ObservableCollection{T}"/>
+        /// <inheritdoc cref="ObservableCollection{T}.RemoveItem"/>
         protected override void RemoveItem(int index)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
@@ -178,7 +178,7 @@ namespace Diversions.ObjectModel
             }
         }
 
-        /// <inheritdoc cref="ObservableCollection{T}"/>
+        /// <inheritdoc cref="ObservableCollection{T}.SetItem"/>
         protected override void SetItem(int index, TItem item)
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
@@ -192,7 +192,7 @@ namespace Diversions.ObjectModel
             }
         }
 
-        /// <inheritdoc cref="ObservableCollection{T}"/>
+        /// <inheritdoc cref="ObservableCollection{T}.ClearItems"/>
         protected override void ClearItems()
         {
             // If any of the event handlers exhibit a SynchronizationContext, make sure to use it here.
