@@ -34,6 +34,9 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\..\CleanMachine\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.ObjectPool, Version=5.0.11.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.ObjectPool.5.0.11\lib\net461\Microsoft.Extensions.ObjectPool.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reactive, Version=4.3.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
@@ -88,6 +91,12 @@
     </Compile>
     <Compile Include="..\..\Core\Diversions\MarshalOption.cs">
       <Link>MarshalOption.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\Diversions\Pool\Pool.cs">
+      <Link>Pool\Pool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Core\Diversions\Pool\Reusable.cs">
+      <Link>Pool\Reusable.cs</Link>
     </Compile>
     <Compile Include="..\..\Core\Diversions\SchedulerDelegate.cs">
       <Link>SchedulerDelegate.cs</Link>
