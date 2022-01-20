@@ -2,59 +2,25 @@
 
 namespace Diversions.Pool
 {
-    public abstract class Reusable
+    /// <summary>
+    /// Thread-safe locking is performed on the self-reference in order to avoid extraneous object creation.
+    /// </summary>
+    public abstract class Reusable : IReusable
     {
-        private readonly object _reuseSync = new object();
-        private bool _isFree;
-        private uint _refCount;
+        /// <summary>
+        /// Gets/sets a value indicating whether the object is in the object pool or not.
+        /// </summary>
+        public bool IsPooled { get; set; }
 
-        protected internal object ReuseSync => _reuseSync;
+        Action<IReusable> IReusable.Return { get; set; }
 
-        internal bool IsFree { get; set; }
-
-        internal uint RefCount => _refCount;
-
-        public bool IsInUse
+        /// <summary>
+        /// Reset this reusable to an initial state that makes it suitable for re-use.
+        /// </summary>
+        public virtual void Reset()
         {
-            get { lock (_reuseSync) return _refCount > 0; }
-        }
-
-        public bool Use()
-        {
-            lock (_reuseSync)
+            lock (this)
             {
-                if (_isFree)
-                {
-                    return false;
-                }
-
-                _refCount++;
-                return true;
-            }
-        }
-
-        public void Release()
-        {
-            lock (_reuseSync)
-            {
-                if (_isFree || _refCount == 0)
-                {
-                    return;
-                }
-
-                _refCount--;
-            }
-        }
-
-        internal void Reset()
-        {
-            lock (_reuseSync)
-            {
-                if (_refCount != 0)
-                {
-                    return;
-                }
-
                 OnReset();
             }
         }
