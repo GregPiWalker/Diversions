@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.ObjectPool;
+using System;
 using System.Collections.Generic;
 
 namespace Diversions.Common.Pool
 {
-    /// <summary>
-    /// Implements a thread-safe <see cref="ObjectPool{T}"/> with optional reference counting.
-    /// </summary>
-    /// <typeparam name="TReusable"></typeparam>
+/// <summary>
+/// Implements a thread-safe <see cref="ObjectPool{T}"/> with optional reference counting.
+/// </summary>
+/// <typeparam name="TReusable"></typeparam>
     public class Pool<TReusable> : ObjectPool<TReusable> where TReusable : class, IReusable, new()
     {
         protected readonly object _syncLock = new object();
@@ -18,13 +19,20 @@ namespace Diversions.Common.Pool
         }
 
         /// <summary>
-        /// Gets/sets the configuration for how the Pool treats reference counting.  When reference counting
-        /// is enabled, the Pool will not return a referenced object.  When it is ignored, objects will
-        /// be returned regardless of their reference count.
+        /// 
         /// </summary>
-        public bool UseReferenceCounting { get; set; }
-
+        /// <returns></returns>
         public override TReusable Get()
+        {
+            return Get(null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public TReusable Get(IEnumerable<KeyValuePair<string, object>> parameters)
         {
             lock (_syncLock)
             {
@@ -42,6 +50,8 @@ namespace Diversions.Common.Pool
                     reusable = new TReusable();
                     reusable.Return = (r) => Return(r as TReusable);
                 }
+
+                reusable.Initialize(parameters);
 
                 if (reusable is ITrackedReusable tracked && fromPool)
                 {
@@ -89,7 +99,7 @@ namespace Diversions.Common.Pool
                     lock (_syncLock)
                     {
                         reusable.IsPooled = true;
-                        reusable.Reset();
+                        reusable.OnReturn();
                         _reusables.Add(reusable);
                     }
                 }
@@ -105,7 +115,7 @@ namespace Diversions.Common.Pool
                     }
 
                     reusable.IsPooled = true;
-                    reusable.Reset();
+                    reusable.OnReturn();
                     _reusables.Add(reusable);
                 }
             }

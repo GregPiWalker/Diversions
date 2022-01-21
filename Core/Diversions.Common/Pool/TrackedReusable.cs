@@ -55,7 +55,7 @@ namespace Diversions.Common.Pool
         /// <summary>
         /// Reset this reusable to an initial state that makes it suitable for re-use.
         /// </summary>
-        public override void Reset()
+        public override void OnReturn()
         {
             lock (this)
             {

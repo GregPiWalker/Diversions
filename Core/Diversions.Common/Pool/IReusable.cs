@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Diversions.Common.Pool
 {
@@ -15,8 +16,14 @@ namespace Diversions.Common.Pool
         bool IsPooled { get; set; }
 
         /// <summary>
-        /// Reset this reusable to an initial state that makes it suitable for re-use.
+        /// Initialize the reusable for use after it has been removed from the pool.
         /// </summary>
-        void Reset();
+        /// <param name="initParameters">Optional set of parameters that will be used to initialize the object.</param>
+        void Initialize(IEnumerable<KeyValuePair<string, object>> initParameters);
+
+        /// <summary>
+        /// Configure this reusable back to a state that makes it suitable for return to the pool.
+        /// </summary>
+        void OnReturn();
     }
 }
