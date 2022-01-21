@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diversions", "Diversions\Di
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diversions.Mvvm", "Diversions.Mvvm\Diversions.Mvvm.csproj", "{1A824158-AA19-4202-AF11-1A14BE7C78FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diversions.Mvvm.Test", "Diversions.Mvvm.Test\Diversions.Mvvm.Test.csproj", "{347540B4-05F0-4B71-8AAF-FBC8CA1F8FFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diversions.Mvvm.Test", "Diversions.Mvvm.Test\Diversions.Mvvm.Test.csproj", "{347540B4-05F0-4B71-8AAF-FBC8CA1F8FFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diversions.Common", "Diversions.Common\Diversions.Common.csproj", "{CC41BBE3-F10F-4FAA-BB13-62B291D90CE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{347540B4-05F0-4B71-8AAF-FBC8CA1F8FFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{347540B4-05F0-4B71-8AAF-FBC8CA1F8FFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{347540B4-05F0-4B71-8AAF-FBC8CA1F8FFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC41BBE3-F10F-4FAA-BB13-62B291D90CE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC41BBE3-F10F-4FAA-BB13-62B291D90CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC41BBE3-F10F-4FAA-BB13-62B291D90CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC41BBE3-F10F-4FAA-BB13-62B291D90CE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

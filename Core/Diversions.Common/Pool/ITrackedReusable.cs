@@ -1,4 +1,5 @@
-﻿namespace Diversions.Pool
+﻿
+namespace Diversions.Common.Pool
 {
     public interface ITrackedReusable : IReusable
     {

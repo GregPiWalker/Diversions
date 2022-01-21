@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diversions", "Diversions\Di
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diversions.Mvvm", "Diversions.Mvvm\Diversions.Mvvm.csproj", "{19A9CAC8-BB26-483D-B040-2FE80F8AD72A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diversions.Common", "Diversions.Common\Diversions.Common.csproj", "{9375957A-68ED-469D-B359-997B7E323C53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{19A9CAC8-BB26-483D-B040-2FE80F8AD72A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19A9CAC8-BB26-483D-B040-2FE80F8AD72A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19A9CAC8-BB26-483D-B040-2FE80F8AD72A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9375957A-68ED-469D-B359-997B7E323C53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9375957A-68ED-469D-B359-997B7E323C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9375957A-68ED-469D-B359-997B7E323C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9375957A-68ED-469D-B359-997B7E323C53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

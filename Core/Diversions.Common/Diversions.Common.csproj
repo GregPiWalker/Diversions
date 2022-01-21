@@ -3,10 +3,8 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
-    <ApplicationIcon />
-    <StartupObject />
-    <AssemblyName>Diversions</AssemblyName>
-    <RootNamespace>Diversions</RootNamespace>
+    <AssemblyName>Diversions.Common</AssemblyName>
+    <RootNamespace>Diversions.Common</RootNamespace>
   </PropertyGroup>
   
   <!-- <ItemGroup>
@@ -14,13 +12,7 @@
   </ItemGroup> -->
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.10" />
-    <PackageReference Include="System.Reactive" Version="4.3.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Diversions.Common\Diversions.Common.csproj" />
   </ItemGroup>
 
 </Project>

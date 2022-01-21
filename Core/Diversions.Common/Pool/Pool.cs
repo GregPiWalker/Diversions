@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.ObjectPool;
 using System.Collections.Generic;
 
-namespace Diversions.Pool
+namespace Diversions.Common.Pool
 {
     /// <summary>
     /// Implements a thread-safe <see cref="ObjectPool{T}"/> with optional reference counting.

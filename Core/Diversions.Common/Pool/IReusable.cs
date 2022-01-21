@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Diversions.Pool
+namespace Diversions.Common.Pool
 {
     public interface IReusable
     {

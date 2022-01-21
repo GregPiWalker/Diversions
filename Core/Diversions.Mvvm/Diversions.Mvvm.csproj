@@ -1,7 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+      <OutputType>Library</OutputType>
+      <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+      <AssemblyName>Diversions.Mvvm</AssemblyName>
+      <RootNamespace>Diversions.Mvvm</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>Diversions.Common</AssemblyName>
+    <RootNamespace>Diversions.Common</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Core\Diversions.Common\Pool\IReusable.cs" Link="Pool\IReusable.cs" />
+    <Compile Include="..\..\Core\Diversions.Common\Pool\ITrackedReusable.cs" Link="Pool\ITrackedReusable.cs" />
+    <Compile Include="..\..\Core\Diversions.Common\Pool\Pool.cs" Link="Pool\Pool.cs" />
+    <Compile Include="..\..\Core\Diversions.Common\Pool\Reusable.cs" Link="Pool\Reusable.cs" />
+    <Compile Include="..\..\Core\Diversions.Common\Pool\TrackedReusable.cs" Link="Pool\TrackedReusable.cs" />
+  </ItemGroup>
+  
+  <!-- <ItemGroup>
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+  </ItemGroup> -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pool\" />
+  </ItemGroup>
+
+</Project>

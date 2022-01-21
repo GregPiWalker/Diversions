@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Diversions.Pool
+namespace Diversions.Common.Pool
 {
     /// <summary>
     /// Thread-safe locking is performed on the self-reference in order to avoid extraneous object creation.

@@ -92,21 +92,6 @@
     <Compile Include="..\..\Core\Diversions\MarshalOption.cs">
       <Link>MarshalOption.cs</Link>
     </Compile>
-    <Compile Include="..\..\Core\Diversions\Pool\IReusable.cs">
-      <Link>Pool\IReusable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Core\Diversions\Pool\ITrackedReusable.cs">
-      <Link>Pool\ITrackedReusable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Core\Diversions\Pool\Pool.cs">
-      <Link>Pool\Pool.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Core\Diversions\Pool\Reusable.cs">
-      <Link>Pool\Reusable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Core\Diversions\Pool\TrackeedReusable.cs">
-      <Link>Pool\TrackeedReusable.cs</Link>
-    </Compile>
     <Compile Include="..\..\Core\Diversions\SchedulerDelegate.cs">
       <Link>SchedulerDelegate.cs</Link>
     </Compile>
